@@ -72,8 +72,6 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
   } | null>(null);
   const [copiedToken, setCopiedToken] = useState(false);
 
-  const activeEndpoints = endpoints.filter(ep => ep.status === 'active');
-  
   // Calculate positions for endpoints in a circular layout
   const getEndpointPositions = (): { [key: string]: Position } => {
     const positions: { [key: string]: Position } = {};
@@ -81,8 +79,8 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
     const centerY = 300;
     const radius = 200;
     
-    activeEndpoints.forEach((endpoint, index) => {
-      const angle = (index * 2 * Math.PI) / activeEndpoints.length;
+    endpoints.forEach((endpoint, index) => {
+      const angle = (index * 2 * Math.PI) / endpoints.length;
       positions[endpoint.name] = {
         x: centerX + radius * Math.cos(angle),
         y: centerY + radius * Math.sin(angle)
@@ -538,7 +536,7 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
         )}
 
         {/* Connection lines */}
-        {activeEndpoints.map(endpoint => 
+        {endpoints.filter(ep => ep.status === 'active').map(endpoint => 
           endpoint.connections.map((conn, connIndex) => {
             const sourcePos = positions[endpoint.name];
             const targetPos = positions[conn.target];
@@ -595,7 +593,7 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
         )}
 
         {/* Endpoint nodes */}
-        {activeEndpoints.map((endpoint) => {
+        {endpoints.map((endpoint) => {
           const pos = positions[endpoint.name];
           if (!pos) return null;
 
