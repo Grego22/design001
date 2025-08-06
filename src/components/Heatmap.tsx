@@ -90,24 +90,6 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
         return `rgba(16, 185, 129, ${0.3 + intensity * 0.7})`;
       },
       unit: 'activity'
-    },
-    {
-      id: 'security',
-      name: 'Security Score',
-      icon: Shield,
-      color: 'text-purple-600',
-      getValue: (endpoint) => {
-        let score = 0;
-        if (endpoint.authType === 'Certificate') score += 50;
-        if (endpoint.phase1Algorithm.includes('AES256')) score += 30;
-        if (endpoint.phase2Algorithm.includes('AES256')) score += 20;
-        return score;
-      },
-      getColor: (value, max) => {
-        const intensity = max > 0 ? value / max : 0;
-        return `rgba(147, 51, 234, ${0.3 + intensity * 0.7})`;
-      },
-      unit: 'score'
     }
   ];
 
@@ -116,8 +98,8 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
   const maxValue = Math.max(...metricValues, 1);
 
   // Convert lat/lng to SVG coordinates
-  const mapWidth = 800;
-  const mapHeight = 500;
+  const mapWidth = 900;
+  const mapHeight = 600;
   const latRange = { min: 24, max: 49 }; // Approximate US latitude range
   const lngRange = { min: -125, max: -66 }; // Approximate US longitude range
 
@@ -139,7 +121,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-800">Network Heatmap</h1>
-              <p className="text-slate-600">Geographical visualization of gateway performance and security metrics</p>
+              <p className="text-slate-600">Geographical visualization of gateway performance metrics</p>
             </div>
           </div>
         </div>
@@ -147,7 +129,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
         {/* Metric Selector */}
         <div className="mb-8">
           <h2 className="text-lg font-bold text-slate-800 mb-4">Select Metric</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {metrics.map((metric) => {
               const Icon = metric.icon;
               const isSelected = selectedMetric === metric.id;
@@ -199,7 +181,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
               viewBox={`0 0 ${mapWidth} ${mapHeight}`}
               style={{ backgroundColor: '#f8fafc' }}
             >
-              {/* US Map Outline (simplified) */}
+              {/* US Map Outline */}
               <defs>
                 <pattern id="mapGrid" width="50" height="50" patternUnits="userSpaceOnUse">
                   <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e2e8f0" strokeWidth="1" opacity="0.3"/>
@@ -208,17 +190,35 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
               
               <rect width="100%" height="100%" fill="url(#mapGrid)" />
               
-              {/* State boundaries (simplified representation) */}
+              {/* Simplified US Map Outline */}
+              <g stroke="#94a3b8" strokeWidth="2" fill="none" opacity="0.6">
+                {/* Continental US outline (simplified) */}
+                <path d="M 150 450 L 100 400 L 80 350 L 90 300 L 120 250 L 150 200 L 200 150 L 300 120 L 400 100 L 500 110 L 600 120 L 700 140 L 750 180 L 780 220 L 800 280 L 820 350 L 800 400 L 750 450 L 700 480 L 600 500 L 500 510 L 400 500 L 300 480 L 200 460 Z" />
+                
+                {/* Florida */}
+                <path d="M 650 450 L 680 480 L 700 520 L 720 550 L 680 560 L 650 540 L 640 500 Z" />
+                
+                {/* Texas outline */}
+                <path d="M 350 350 L 400 380 L 450 400 L 480 450 L 450 480 L 400 470 L 350 450 L 320 400 Z" />
+                
+                {/* California outline */}
+                <path d="M 80 200 L 100 250 L 120 350 L 140 450 L 120 480 L 100 450 L 90 400 L 80 350 L 70 300 L 75 250 Z" />
+              </g>
+
+              {/* State boundary lines */}
               <g stroke="#cbd5e1" strokeWidth="1" fill="none" opacity="0.4">
-                {/* Simplified US state lines */}
-                <line x1="200" y1="50" x2="200" y2="450" />
-                <line x1="300" y1="50" x2="300" y2="450" />
-                <line x1="400" y1="50" x2="400" y2="450" />
-                <line x1="500" y1="50" x2="500" y2="450" />
-                <line x1="600" y1="50" x2="600" y2="450" />
-                <line x1="50" y1="150" x2="750" y2="150" />
-                <line x1="50" y1="250" x2="750" y2="250" />
-                <line x1="50" y1="350" x2="750" y2="350" />
+                {/* Vertical lines (longitude) */}
+                <line x1="200" y1="100" x2="180" y2="500" />
+                <line x1="300" y1="100" x2="280" y2="500" />
+                <line x1="400" y1="100" x2="380" y2="500" />
+                <line x1="500" y1="100" x2="480" y2="500" />
+                <line x1="600" y1="120" x2="580" y2="500" />
+                <line x1="700" y1="140" x2="680" y2="500" />
+                
+                {/* Horizontal lines (latitude) */}
+                <line x1="80" y1="200" x2="800" y2="180" />
+                <line x1="90" y1="300" x2="820" y2="280" />
+                <line x1="120" y1="400" x2="800" y2="380" />
               </g>
 
               {/* Connection lines */}
@@ -411,13 +411,13 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-slate-700 mb-3">Information Display</h4>
+              <h4 className="font-semibold text-slate-700 mb-3">Map Features</h4>
               <div className="space-y-2 text-sm text-slate-600">
-                <div>• Gateway name above each marker</div>
-                <div>• Metric value inside each circle</div>
-                <div>• City, State below each marker</div>
-                <div>• IP address at the bottom</div>
+                <div>• Simplified US continental outline</div>
+                <div>• State boundary grid lines</div>
+                <div>• Gateways positioned by city coordinates</div>
                 <div>• Connection lines show IPSec tunnels</div>
+                <div>• Circle size indicates metric intensity</div>
               </div>
             </div>
           </div>

@@ -17,7 +17,6 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
   const securityMetrics = {
     certificateAuth: endpoints.filter(ep => ep.authType === 'Certificate').length,
     pskAuth: endpoints.filter(ep => ep.authType === 'PSK').length,
-    strongSwanVersions: [...new Set(endpoints.map(ep => ep.ipsecImplementation))],
   };
 
   return (
@@ -61,10 +60,10 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
           <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Security Score</p>
-                <p className="text-3xl font-bold text-amber-600">A+</p>
+                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Total Connections</p>
+                <p className="text-3xl font-bold text-amber-600">{totalConnections}</p>
               </div>
-              <Shield className="w-8 h-8 text-amber-600" />
+              <Activity className="w-8 h-8 text-amber-600" />
             </div>
           </div>
 
