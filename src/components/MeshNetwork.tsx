@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, X, Settings } from 'lucide-react';
+import { Plus, X, Settings, Copy, CheckCircle } from 'lucide-react';
 import { Endpoint, Connection, NetworkBlastParams } from '../types/endpoint';
 
 interface MeshNetworkProps {
@@ -64,6 +64,13 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
   });
 
   const [isAddingNode, setIsAddingNode] = useState(false);
+  const [showTokenModal, setShowTokenModal] = useState(false);
+  const [newGatewayToken, setNewGatewayToken] = useState<{
+    gatewayName: string;
+    token: string;
+    expiry: number;
+  } | null>(null);
+  const [copiedToken, setCopiedToken] = useState(false);
 
   const activeEndpoints = endpoints.filter(ep => ep.status === 'active');
   
@@ -86,6 +93,53 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
   };
 
   const positions = getEndpointPositions();
+
+  // Auto-activate gateways after 1 minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const updatedEndpoints = endpoints.map(endpoint => {
+        if (endpoint.status === 'inactive' && 
+            endpoint.createdAt && 
+            endpoint.tokenExpiry &&
+            now > endpoint.createdAt + 60000) { // 1 minute after creation
+          return {
+            ...endpoint,
+            status: 'active' as const,
+            registrationToken: undefined,
+            tokenExpiry: undefined
+          };
+        }
+        return endpoint;
+      });
+      
+      if (JSON.stringify(updatedEndpoints) !== JSON.stringify(endpoints)) {
+        onEndpointsChange(updatedEndpoints);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [endpoints, onEndpointsChange]);
+
+  // Generate a random token
+  const generateToken = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 32; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedToken(true);
+      setTimeout(() => setCopiedToken(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy token:', err);
+    }
+  };
 
   const handleConnectionHover = (
     event: React.MouseEvent,
@@ -196,24 +250,37 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
       const y = event.clientY - rect.top;
       
       const newNodeNumber = endpoints.length + 1;
+      const token = generateToken();
+      const now = Date.now();
+      const gatewayName = `gateway-${String(newNodeNumber).padStart(3, '0')}`;
+      
       const newEndpoint: Endpoint = {
         id: `ep-${String(newNodeNumber).padStart(3, '0')}`,
-        name: `gateway-${String(newNodeNumber).padStart(3, '0')}`,
+        name: gatewayName,
         ipAddress: `192.168.1.${20 + newNodeNumber}`,
         geoLocation: {
           city: 'New City',
           state: 'XX'
         },
-        status: 'active',
+        status: 'inactive',
         ipsecImplementation: 'StrongSwan 5.9.8',
         rekeyingInterval: '3600s',
         phase1Algorithm: 'AES256-SHA256-MODP2048',
         phase2Algorithm: 'AES256-SHA256-PFS',
         authType: 'Certificate',
-        connections: []
+        connections: [],
+        registrationToken: token,
+        tokenExpiry: now + 300000, // 5 minutes
+        createdAt: now
       };
       
       onEndpointsChange([...endpoints, newEndpoint]);
+      setNewGatewayToken({
+        gatewayName,
+        token,
+        expiry: now + 300000
+      });
+      setShowTokenModal(true);
       setIsAddingNode(false);
     }
   };
@@ -347,6 +414,89 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
         </div>
       )}
 
+      {/* Token Modal */}
+      {showTokenModal && newGatewayToken && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30">
+          <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-8 max-w-md w-full mx-4">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-slate-800">Gateway Registration Token</h3>
+              <button
+                onClick={() => {
+                  setShowTokenModal(false);
+                  setNewGatewayToken(null);
+                  setCopiedToken(false);
+                }}
+                className="p-1 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-slate-600 font-medium block mb-2">Gateway Name:</label>
+                <div className="bg-slate-100 px-3 py-2 rounded-lg font-mono text-slate-800">
+                  {newGatewayToken.gatewayName}
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-slate-600 font-medium block mb-2">Registration Token:</label>
+                <div className="bg-slate-100 px-3 py-2 rounded-lg font-mono text-slate-800 break-all text-sm">
+                  {newGatewayToken.token}
+                </div>
+                <button
+                  onClick={() => copyToClipboard(newGatewayToken.token)}
+                  className="mt-2 flex items-center px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 text-sm"
+                >
+                  {copiedToken ? (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy Token
+                    </>
+                  )}
+                </button>
+              </div>
+              
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div className="flex items-start">
+                  <div className="w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                    <span className="text-white text-xs font-bold">!</span>
+                  </div>
+                  <div>
+                    <p className="text-amber-800 font-medium text-sm mb-1">Important:</p>
+                    <ul className="text-amber-700 text-sm space-y-1">
+                      <li>• Token expires in 5 minutes</li>
+                      <li>• Gateway will appear as inactive (red dot)</li>
+                      <li>• Use this token to register your client</li>
+                      <li>• Gateway will auto-activate in 1 minute after registration</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex justify-end mt-6">
+              <button
+                onClick={() => {
+                  setShowTokenModal(false);
+                  setNewGatewayToken(null);
+                  setCopiedToken(false);
+                }}
+                className="px-4 py-2 bg-slate-500 text-white rounded-lg hover:bg-slate-600 transition-colors duration-200"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <svg
         ref={svgRef}
         width="800"
@@ -473,6 +623,32 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
                 onMouseDown={(e) => handleNodeMouseDown(endpoint.name, e)}
                 onMouseUp={(e) => handleNodeMouseUp(endpoint.name, e)}
               />
+              {/* Registration token indicator for new inactive gateways */}
+              {endpoint.status === 'inactive' && endpoint.registrationToken && (
+                <circle
+                  cx={pos.x + 30}
+                  cy={pos.y - 30}
+                  r="8"
+                  fill="#f59e0b"
+                  stroke="white"
+                  strokeWidth="2"
+                  className="animate-pulse"
+                />
+              )}
+              {endpoint.status === 'inactive' && endpoint.registrationToken && (
+                <text
+                  x={pos.x + 30}
+                  y={pos.y - 30}
+                  textAnchor="middle"
+                  dy="0.35em"
+                  fill="white"
+                  fontSize="8"
+                  fontWeight="bold"
+                  className="pointer-events-none"
+                >
+                  T
+                </text>
+              )}
               {/* Node label */}
               <text
                 x={pos.x}
@@ -594,12 +770,20 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
             <span className="text-slate-600">Active Gateway</span>
           </div>
           <div className="flex items-center">
+            <div className="w-4 h-4 bg-slate-600 rounded-full mr-2"></div>
+            <span className="text-slate-600">Inactive Gateway</span>
+          </div>
+          <div className="flex items-center">
             <div className="w-4 h-1 bg-blue-600 mr-2" style={{clipPath: 'polygon(0 0, 80% 0, 100% 50%, 80% 100%, 0 100%)'}}></div>
             <span className="text-slate-600">IPSec Tunnel</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 bg-emerald-600 rounded-full mr-2 animate-pulse"></div>
             <span className="text-slate-600">Active Status</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-amber-500 rounded-full mr-2 animate-pulse"></div>
+            <span className="text-slate-600">Registration Token</span>
           </div>
         </div>
       </div>

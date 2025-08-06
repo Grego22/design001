@@ -30,4 +30,7 @@ export interface Endpoint {
   phase2Algorithm: string;
   authType: 'PSK' | 'Certificate';
   connections: Connection[];
+  registrationToken?: string;
+  tokenExpiry?: number;
+  createdAt?: number;
 }
