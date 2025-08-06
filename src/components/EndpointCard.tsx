@@ -31,9 +31,9 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
   const updateConnection = (index: number, field: keyof Connection, value: string) => {
     const updatedConnections = [...editedEndpoint.connections];
     if (field === 'timeToNextRekeying') {
-      updatedConnections[index] = { ...updatedConnections[index], [field]: value as number };
+      updatedConnections[index] = { ...updatedConnections[index], [field]: parseInt(value) || 0 };
     } else {
-      updatedConnections[index] = { ...updatedConnections[index], [field]: value as string };
+      updatedConnections[index] = { ...updatedConnections[index], [field]: value };
     }
     setEditedEndpoint({ ...editedEndpoint, connections: updatedConnections });
   };
@@ -148,6 +148,24 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
             </span>
           </div>
         </div>
+
+        {/* Save/Cancel buttons for main endpoint editing */}
+        {isEditing && (
+          <div className="flex justify-end space-x-2 mb-4 pt-4 border-t border-slate-200">
+            <button
+              onClick={handleCancel}
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+            >
+              Save Changes
+            </button>
+          </div>
+        )}
 
         {/* Active Connections */}
         <div>

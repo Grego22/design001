@@ -17,6 +17,30 @@ interface HeatmapMetric {
   unit: string;
 }
 
+// Approximate coordinates for US cities (latitude, longitude)
+const cityCoordinates: { [key: string]: { lat: number; lng: number } } = {
+  'New York': { lat: 40.7128, lng: -74.0060 },
+  'Los Angeles': { lat: 34.0522, lng: -118.2437 },
+  'Chicago': { lat: 41.8781, lng: -87.6298 },
+  'Miami': { lat: 25.7617, lng: -80.1918 },
+  'Seattle': { lat: 47.6062, lng: -122.3321 },
+  'Dallas': { lat: 32.7767, lng: -96.7970 },
+  'Denver': { lat: 39.7392, lng: -104.9903 },
+  'Atlanta': { lat: 33.7490, lng: -84.3880 },
+  'Phoenix': { lat: 33.4484, lng: -112.0740 },
+  'Boston': { lat: 42.3601, lng: -71.0589 },
+  'San Francisco': { lat: 37.7749, lng: -122.4194 },
+  'Washington': { lat: 38.9072, lng: -77.0369 },
+  'Philadelphia': { lat: 39.9526, lng: -75.1652 },
+  'Houston': { lat: 29.7604, lng: -95.3698 },
+  'Detroit': { lat: 42.3314, lng: -83.0458 },
+  'Minneapolis': { lat: 44.9778, lng: -93.2650 },
+  'Portland': { lat: 45.5152, lng: -122.6784 },
+  'Las Vegas': { lat: 36.1699, lng: -115.1398 },
+  'Nashville': { lat: 36.1627, lng: -86.7816 },
+  'New City': { lat: 39.8283, lng: -98.5795 } // Default center of US
+};
+
 const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
   const [selectedMetric, setSelectedMetric] = useState<string>('connections');
 
@@ -29,7 +53,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
       getValue: (endpoint) => endpoint.connections.length,
       getColor: (value, max) => {
         const intensity = max > 0 ? value / max : 0;
-        return `rgba(59, 130, 246, ${0.2 + intensity * 0.8})`;
+        return `rgba(59, 130, 246, ${0.3 + intensity * 0.7})`;
       },
       unit: 'connections'
     },
@@ -46,7 +70,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
       },
       getColor: (value, max) => {
         const intensity = max > 0 ? value / max : 0;
-        return `rgba(245, 158, 11, ${0.2 + intensity * 0.8})`;
+        return `rgba(245, 158, 11, ${0.3 + intensity * 0.7})`;
       },
       unit: 'ms'
     },
@@ -63,7 +87,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
       },
       getColor: (value, max) => {
         const intensity = max > 0 ? value / max : 0;
-        return `rgba(16, 185, 129, ${0.2 + intensity * 0.8})`;
+        return `rgba(16, 185, 129, ${0.3 + intensity * 0.7})`;
       },
       unit: 'activity'
     },
@@ -81,7 +105,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
       },
       getColor: (value, max) => {
         const intensity = max > 0 ? value / max : 0;
-        return `rgba(147, 51, 234, ${0.2 + intensity * 0.8})`;
+        return `rgba(147, 51, 234, ${0.3 + intensity * 0.7})`;
       },
       unit: 'score'
     }
@@ -91,10 +115,18 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
   const metricValues = endpoints.map(ep => currentMetric.getValue(ep));
   const maxValue = Math.max(...metricValues, 1);
 
-  // Create a grid layout for the heatmap
-  const gridSize = Math.ceil(Math.sqrt(endpoints.length));
-  const cellSize = 120;
-  const padding = 20;
+  // Convert lat/lng to SVG coordinates
+  const mapWidth = 800;
+  const mapHeight = 500;
+  const latRange = { min: 24, max: 49 }; // Approximate US latitude range
+  const lngRange = { min: -125, max: -66 }; // Approximate US longitude range
+
+  const getCoordinates = (endpoint: Endpoint) => {
+    const coords = cityCoordinates[endpoint.geoLocation.city] || cityCoordinates['New City'];
+    const x = ((coords.lng - lngRange.min) / (lngRange.max - lngRange.min)) * mapWidth;
+    const y = mapHeight - ((coords.lat - latRange.min) / (latRange.max - latRange.min)) * mapHeight;
+    return { x, y };
+  };
 
   return (
     <div className="h-full overflow-auto bg-slate-50">
@@ -107,7 +139,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-800">Network Heatmap</h1>
-              <p className="text-slate-600">Visual analysis of gateway performance and security metrics</p>
+              <p className="text-slate-600">Geographical visualization of gateway performance and security metrics</p>
             </div>
           </div>
         </div>
@@ -145,12 +177,12 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
           </div>
         </div>
 
-        {/* Heatmap Grid */}
+        {/* Geographic Heatmap */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-slate-800 flex items-center">
               <currentMetric.icon className={`w-6 h-6 mr-3 ${currentMetric.color}`} />
-              {currentMetric.name} Heatmap
+              {currentMetric.name} Geographic Distribution
             </h2>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-slate-600">Low</span>
@@ -161,100 +193,127 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
           
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
             <svg
-              width={gridSize * (cellSize + padding)}
-              height={gridSize * (cellSize + padding)}
-              className="w-full h-auto"
-              viewBox={`0 0 ${gridSize * (cellSize + padding)} ${gridSize * (cellSize + padding)}`}
+              width={mapWidth}
+              height={mapHeight}
+              className="w-full h-auto border border-slate-200 rounded-lg"
+              viewBox={`0 0 ${mapWidth} ${mapHeight}`}
+              style={{ backgroundColor: '#f8fafc' }}
             >
+              {/* US Map Outline (simplified) */}
+              <defs>
+                <pattern id="mapGrid" width="50" height="50" patternUnits="userSpaceOnUse">
+                  <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e2e8f0" strokeWidth="1" opacity="0.3"/>
+                </pattern>
+              </defs>
+              
+              <rect width="100%" height="100%" fill="url(#mapGrid)" />
+              
+              {/* State boundaries (simplified representation) */}
+              <g stroke="#cbd5e1" strokeWidth="1" fill="none" opacity="0.4">
+                {/* Simplified US state lines */}
+                <line x1="200" y1="50" x2="200" y2="450" />
+                <line x1="300" y1="50" x2="300" y2="450" />
+                <line x1="400" y1="50" x2="400" y2="450" />
+                <line x1="500" y1="50" x2="500" y2="450" />
+                <line x1="600" y1="50" x2="600" y2="450" />
+                <line x1="50" y1="150" x2="750" y2="150" />
+                <line x1="50" y1="250" x2="750" y2="250" />
+                <line x1="50" y1="350" x2="750" y2="350" />
+              </g>
+
+              {/* Connection lines */}
+              {endpoints.map(endpoint => 
+                endpoint.connections.map((conn, connIndex) => {
+                  const sourceCoords = getCoordinates(endpoint);
+                  const targetEndpoint = endpoints.find(ep => ep.name === conn.target);
+                  if (!targetEndpoint) return null;
+                  const targetCoords = getCoordinates(targetEndpoint);
+                  
+                  return (
+                    <line
+                      key={`${endpoint.id}-${connIndex}`}
+                      x1={sourceCoords.x}
+                      y1={sourceCoords.y}
+                      x2={targetCoords.x}
+                      y2={targetCoords.y}
+                      stroke="#3b82f6"
+                      strokeWidth="2"
+                      strokeDasharray="3,3"
+                      opacity="0.4"
+                    />
+                  );
+                })
+              )}
+
+              {/* Gateway markers */}
               {endpoints.map((endpoint, index) => {
-                const row = Math.floor(index / gridSize);
-                const col = index % gridSize;
-                const x = col * (cellSize + padding) + padding;
-                const y = row * (cellSize + padding) + padding;
+                const coords = getCoordinates(endpoint);
                 const value = currentMetric.getValue(endpoint);
                 const fillColor = currentMetric.getColor(value, maxValue);
+                const radius = 15 + (value / maxValue) * 15; // Size based on metric value
                 
                 return (
                   <g key={endpoint.id}>
-                    {/* Cell background */}
-                    <rect
-                      x={x}
-                      y={y}
-                      width={cellSize}
-                      height={cellSize}
-                      fill={fillColor}
-                      stroke="#e2e8f0"
-                      strokeWidth="2"
-                      rx="12"
-                      className="hover:stroke-blue-500 transition-colors duration-200"
-                    />
-                    
-                    {/* Status indicator */}
+                    {/* Gateway circle with heatmap color */}
                     <circle
-                      cx={x + cellSize - 15}
-                      cy={y + 15}
-                      r="6"
-                      fill={endpoint.status === 'active' ? '#10b981' : '#ef4444'}
-                      stroke="white"
-                      strokeWidth="2"
+                      cx={coords.x}
+                      cy={coords.y}
+                      r={radius}
+                      fill={fillColor}
+                      stroke={endpoint.status === 'active' ? '#10b981' : '#ef4444'}
+                      strokeWidth="3"
+                      className="hover:stroke-blue-500 transition-colors duration-200"
                     />
                     
                     {/* Gateway name */}
                     <text
-                      x={x + cellSize / 2}
-                      y={y + 25}
+                      x={coords.x}
+                      y={coords.y - radius - 8}
                       textAnchor="middle"
                       fill="#1e293b"
-                      fontSize="14"
+                      fontSize="12"
                       fontWeight="bold"
+                      className="pointer-events-none"
                     >
                       {endpoint.name}
                     </text>
                     
-                    {/* IP Address */}
-                    <text
-                      x={x + cellSize / 2}
-                      y={y + 45}
-                      textAnchor="middle"
-                      fill="#64748b"
-                      fontSize="11"
-                      fontFamily="monospace"
-                    >
-                      {endpoint.ipAddress}
-                    </text>
-                    
-                    {/* Location */}
-                    <text
-                      x={x + cellSize / 2}
-                      y={y + 60}
-                      textAnchor="middle"
-                      fill="#64748b"
-                      fontSize="10"
-                    >
-                      {endpoint.geoLocation.city}, {endpoint.geoLocation.state}
-                    </text>
-                    
                     {/* Metric value */}
                     <text
-                      x={x + cellSize / 2}
-                      y={y + 85}
+                      x={coords.x}
+                      y={coords.y}
                       textAnchor="middle"
                       fill="#1e293b"
-                      fontSize="18"
+                      fontSize="10"
                       fontWeight="bold"
+                      className="pointer-events-none"
                     >
                       {value.toFixed(1)}
                     </text>
                     
-                    {/* Metric unit */}
+                    {/* Location info */}
                     <text
-                      x={x + cellSize / 2}
-                      y={y + 100}
+                      x={coords.x}
+                      y={coords.y + radius + 15}
                       textAnchor="middle"
                       fill="#64748b"
                       fontSize="10"
+                      className="pointer-events-none"
                     >
-                      {currentMetric.unit}
+                      {endpoint.geoLocation.city}, {endpoint.geoLocation.state}
+                    </text>
+                    
+                    {/* IP Address */}
+                    <text
+                      x={coords.x}
+                      y={coords.y + radius + 28}
+                      textAnchor="middle"
+                      fill="#64748b"
+                      fontSize="9"
+                      fontFamily="monospace"
+                      className="pointer-events-none"
+                    >
+                      {endpoint.ipAddress}
                     </text>
                   </g>
                 );
@@ -314,23 +373,23 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
         <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
           <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
             <MapPin className="w-5 h-5 mr-2 text-blue-600" />
-            Heatmap Legend
+            Geographic Heatmap Legend
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="font-semibold text-slate-700 mb-3">Color Intensity</h4>
+              <h4 className="font-semibold text-slate-700 mb-3">Circle Size & Color</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center">
-                  <div className="w-4 h-4 bg-slate-200 rounded mr-3"></div>
-                  <span className="text-slate-600">Low activity/value</span>
+                  <div className="w-6 h-6 bg-slate-200 rounded-full mr-3"></div>
+                  <span className="text-slate-600">Low metric value</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="w-4 h-4 rounded mr-3" style={{ backgroundColor: currentMetric.getColor(maxValue * 0.5, maxValue) }}></div>
-                  <span className="text-slate-600">Medium activity/value</span>
+                  <div className="w-8 h-8 rounded-full mr-3" style={{ backgroundColor: currentMetric.getColor(maxValue * 0.5, maxValue) }}></div>
+                  <span className="text-slate-600">Medium metric value</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="w-4 h-4 rounded mr-3" style={{ backgroundColor: currentMetric.getColor(maxValue, maxValue) }}></div>
-                  <span className="text-slate-600">High activity/value</span>
+                  <div className="w-10 h-10 rounded-full mr-3" style={{ backgroundColor: currentMetric.getColor(maxValue, maxValue) }}></div>
+                  <span className="text-slate-600">High metric value</span>
                 </div>
               </div>
             </div>
@@ -338,13 +397,27 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
               <h4 className="font-semibold text-slate-700 mb-3">Status Indicators</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center">
-                  <div className="w-3 h-3 bg-emerald-500 rounded-full mr-3"></div>
+                  <div className="w-4 h-4 border-2 border-emerald-500 rounded-full mr-3"></div>
                   <span className="text-slate-600">Gateway Active</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
+                  <div className="w-4 h-4 border-2 border-red-500 rounded-full mr-3"></div>
                   <span className="text-slate-600">Gateway Inactive</span>
                 </div>
+                <div className="flex items-center">
+                  <div className="w-8 h-1 bg-blue-600 mr-3 opacity-40" style={{clipPath: 'polygon(0 0, 80% 0, 100% 50%, 80% 100%, 0 100%)'}}></div>
+                  <span className="text-slate-600">IPSec Connection</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold text-slate-700 mb-3">Information Display</h4>
+              <div className="space-y-2 text-sm text-slate-600">
+                <div>• Gateway name above each marker</div>
+                <div>• Metric value inside each circle</div>
+                <div>• City, State below each marker</div>
+                <div>• IP address at the bottom</div>
+                <div>• Connection lines show IPSec tunnels</div>
               </div>
             </div>
           </div>
