@@ -507,6 +507,16 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
                 fontFamily="monospace"
                 className="pointer-events-none"
               >
+                {endpoint.ipAddress}
+              </text>
+              <text
+                x={pos.x}
+                y={pos.y + 85}
+                textAnchor="middle"
+                fill="#64748b"
+                fontSize="10"
+                className="pointer-events-none"
+              >
                 {endpoint.geoLocation.city}, {endpoint.geoLocation.state}
               </text>
               {/* Status indicator */}

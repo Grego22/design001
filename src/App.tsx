@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Reports from './components/Reports';
+import Heatmap from './components/Heatmap';
 import { mockEndpoints, networkBlastParams } from './data/mockData';
 import { NetworkBlastParams } from './types/endpoint';
 
@@ -24,6 +25,9 @@ function App() {
             blastParams={blastParams}
             onBlastParamsChange={setBlastParams}
           />
+        )}
+        {selectedProduct === 'heatmap' && (
+          <Heatmap endpoints={endpoints} blastParams={blastParams} />
         )}
         {selectedProduct === 'reports' && (
           <Reports endpoints={endpoints} blastParams={blastParams} />
