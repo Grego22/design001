@@ -2,17 +2,23 @@ import React from 'react';
 import { Activity, Shield, Lock, Zap, Globe, Network } from 'lucide-react';
 import EndpointCard from './EndpointCard';
 import MeshNetwork from './MeshNetwork';
-import { Endpoint } from '../types/endpoint';
+import { Endpoint, NetworkBlastParams } from '../types/endpoint';
 
 interface DashboardProps {
   endpoints: Endpoint[];
   onEndpointsChange: (endpoints: Endpoint[]) => void;
+  blastParams: NetworkBlastParams;
+  onBlastParamsChange: (params: NetworkBlastParams) => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ endpoints, onEndpointsChange }) => {
+const Dashboard: React.FC<DashboardProps> = ({ 
+  endpoints, 
+  onEndpointsChange, 
+  blastParams, 
+  onBlastParamsChange 
+}) => {
   const activeEndpoints = endpoints.filter(ep => ep.status === 'active').length;
   const totalConnections = endpoints.reduce((acc, ep) => acc + ep.connections.length, 0);
-  const totalBlastServers = endpoints.reduce((acc, ep) => acc + ep.blast.activeServers, 0);
 
   return (
     <div className="h-full overflow-auto bg-slate-50">
@@ -76,7 +82,7 @@ const Dashboard: React.FC<DashboardProps> = ({ endpoints, onEndpointsChange }) =
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">BLAST Servers</p>
-                  <p className="text-3xl font-bold text-slate-800">{totalBlastServers}</p>
+                  <p className="text-3xl font-bold text-slate-800">{blastParams.activeServers}</p>
                 </div>
               </div>
             </div>
@@ -89,7 +95,12 @@ const Dashboard: React.FC<DashboardProps> = ({ endpoints, onEndpointsChange }) =
             <Network className="w-6 h-6 mr-3 text-blue-600" />
             Interactive Network Mesh Topology
           </h2>
-          <MeshNetwork endpoints={endpoints} onEndpointsChange={onEndpointsChange} />
+          <MeshNetwork 
+            endpoints={endpoints} 
+            onEndpointsChange={onEndpointsChange}
+            blastParams={blastParams}
+            onBlastParamsChange={onBlastParamsChange}
+          />
         </div>
 
         {/* Endpoint Cards */}

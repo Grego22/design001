@@ -1,12 +1,13 @@
 import React from 'react';
 import { BarChart3, TrendingUp, Shield, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
-import { Endpoint } from '../types/endpoint';
+import { Endpoint, NetworkBlastParams } from '../types/endpoint';
 
 interface ReportsProps {
   endpoints: Endpoint[];
+  blastParams: NetworkBlastParams;
 }
 
-const Reports: React.FC<ReportsProps> = ({ endpoints }) => {
+const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
   const activeEndpoints = endpoints.filter(ep => ep.status === 'active').length;
   const totalConnections = endpoints.reduce((acc, ep) => acc + ep.connections.length, 0);
   const avgLatency = endpoints
@@ -17,8 +18,6 @@ const Reports: React.FC<ReportsProps> = ({ endpoints }) => {
     certificateAuth: endpoints.filter(ep => ep.authType === 'Certificate').length,
     pskAuth: endpoints.filter(ep => ep.authType === 'PSK').length,
     strongSwanVersions: [...new Set(endpoints.map(ep => ep.ipsecImplementation))],
-    avgBlastBeta: endpoints.reduce((acc, ep) => acc + ep.blast.beta, 0) / endpoints.length,
-    avgBlastDelta: endpoints.reduce((acc, ep) => acc + ep.blast.delta, 0) / endpoints.length
   };
 
   return (
@@ -123,26 +122,34 @@ const Reports: React.FC<ReportsProps> = ({ endpoints }) => {
             <div className="space-y-4">
               <div className="p-4 bg-slate-50 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium text-slate-700">Average Beta</span>
-                  <span className="text-2xl font-bold text-blue-600">{securityMetrics.avgBlastBeta.toFixed(1)}</span>
+                  <span className="font-medium text-slate-700">Network Beta</span>
+                  <span className="text-2xl font-bold text-blue-600">{blastParams.beta}</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div 
                     className="bg-blue-600 h-2 rounded-full" 
-                    style={{ width: `${(securityMetrics.avgBlastBeta / 5) * 100}%` }}
+                    style={{ width: `${(blastParams.beta / 10) * 100}%` }}
                   ></div>
                 </div>
               </div>
               <div className="p-4 bg-slate-50 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium text-slate-700">Average Delta</span>
-                  <span className="text-2xl font-bold text-emerald-600">{securityMetrics.avgBlastDelta.toFixed(1)}</span>
+                  <span className="font-medium text-slate-700">Network Delta</span>
+                  <span className="text-2xl font-bold text-emerald-600">{blastParams.delta}</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div 
                     className="bg-emerald-600 h-2 rounded-full" 
-                    style={{ width: `${(securityMetrics.avgBlastDelta / 3) * 100}%` }}
+                    style={{ width: `${(blastParams.delta / 10) * 100}%` }}
                   ></div>
+                </div>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-slate-700">Active/Queried Servers</span>
+                  <span className="text-lg font-bold text-amber-600">
+                    {blastParams.activeServers}/{blastParams.queriedServers}
+                  </span>
                 </div>
               </div>
             </div>
@@ -164,7 +171,7 @@ const Reports: React.FC<ReportsProps> = ({ endpoints }) => {
                   <th className="text-left py-3 px-4 font-semibold text-slate-700">Implementation</th>
                   <th className="text-left py-3 px-4 font-semibold text-slate-700">Auth Type</th>
                   <th className="text-left py-3 px-4 font-semibold text-slate-700">Connections</th>
-                  <th className="text-left py-3 px-4 font-semibold text-slate-700">BLAST Servers</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">Location</th>
                 </tr>
               </thead>
               <tbody>
@@ -197,7 +204,7 @@ const Reports: React.FC<ReportsProps> = ({ endpoints }) => {
                     </td>
                     <td className="py-3 px-4 text-sm text-slate-600">{endpoint.connections.length}</td>
                     <td className="py-3 px-4 text-sm text-slate-600">
-                      {endpoint.blast.activeServers}/{endpoint.blast.queriedServers}
+                      {endpoint.geoLocation.city}, {endpoint.geoLocation.state}
                     </td>
                   </tr>
                 ))}

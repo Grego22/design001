@@ -1,4 +1,4 @@
-export interface BlastParams {
+export interface NetworkBlastParams {
   beta: number;
   delta: number;
   activeServers: number;
@@ -11,19 +11,23 @@ export interface Connection {
   phase1Algorithm?: string;
   phase2Algorithm?: string;
   authType?: 'PSK' | 'Certificate';
-  rekeying?: string;
+  rekeyingInterval?: string;
+  timeToNextRekeying?: number; // in seconds
 }
 
 export interface Endpoint {
   id: string;
   name: string;
   ipAddress: string;
+  geoLocation: {
+    city: string;
+    state: string;
+  };
   status: 'active' | 'inactive';
   ipsecImplementation: string;
-  rekeying: string;
+  rekeyingInterval: string;
   phase1Algorithm: string;
   phase2Algorithm: string;
   authType: 'PSK' | 'Certificate';
-  blast: BlastParams;
   connections: Connection[];
 }

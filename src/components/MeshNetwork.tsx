@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, X } from 'lucide-react';
-import { Endpoint, Connection } from '../types/endpoint';
+import { Plus, X, Settings } from 'lucide-react';
+import { Endpoint, Connection, NetworkBlastParams } from '../types/endpoint';
 
 interface MeshNetworkProps {
   endpoints: Endpoint[];
   onEndpointsChange: (endpoints: Endpoint[]) => void;
+  blastParams: NetworkBlastParams;
+  onBlastParamsChange: (params: NetworkBlastParams) => void;
 }
 
 interface Position {
@@ -22,7 +24,8 @@ interface HoverInfo {
   phase1: string;
   phase2: string;
   authType: string;
-  rekeying: string;
+  rekeyingInterval: string;
+  timeToNextRekeying: number;
 }
 
 interface DragState {
@@ -31,8 +34,15 @@ interface DragState {
   currentPos: Position | null;
 }
 
-const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange }) => {
+const MeshNetwork: React.FC<MeshNetworkProps> = ({ 
+  endpoints, 
+  onEndpointsChange, 
+  blastParams, 
+  onBlastParamsChange 
+}) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const [showBlastConfig, setShowBlastConfig] = useState(false);
+  const [editedBlastParams, setEditedBlastParams] = useState<NetworkBlastParams>(blastParams);
   const [hoverInfo, setHoverInfo] = useState<HoverInfo>({
     visible: false,
     x: 0,
@@ -43,7 +53,8 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
     phase1: '',
     phase2: '',
     authType: '',
-    rekeying: ''
+    rekeyingInterval: '',
+    timeToNextRekeying: 0
   });
   
   const [dragState, setDragState] = useState<DragState>({
@@ -93,7 +104,8 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
         phase1: connection.phase1Algorithm || source.phase1Algorithm,
         phase2: connection.phase2Algorithm || source.phase2Algorithm,
         authType: connection.authType || source.authType,
-        rekeying: connection.rekeying || source.rekeying
+        rekeyingInterval: connection.rekeyingInterval || source.rekeyingInterval,
+        timeToNextRekeying: connection.timeToNextRekeying || 0
       });
     }
   };
@@ -145,7 +157,8 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
                 phase1Algorithm: 'AES256-SHA256-MODP2048',
                 phase2Algorithm: 'AES256-SHA256-PFS',
                 authType: 'Certificate' as const,
-                rekeying: '3600s'
+                rekeyingInterval: '3600s',
+                timeToNextRekeying: 3600
               }]
             };
           }
@@ -187,18 +200,16 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
         id: `ep-${String(newNodeNumber).padStart(3, '0')}`,
         name: `gateway-${String(newNodeNumber).padStart(3, '0')}`,
         ipAddress: `192.168.1.${20 + newNodeNumber}`,
+        geoLocation: {
+          city: 'New City',
+          state: 'XX'
+        },
         status: 'active',
         ipsecImplementation: 'StrongSwan 5.9.8',
-        rekeying: '3600s',
+        rekeyingInterval: '3600s',
         phase1Algorithm: 'AES256-SHA256-MODP2048',
         phase2Algorithm: 'AES256-SHA256-PFS',
         authType: 'Certificate',
-        blast: {
-          beta: 3,
-          delta: 1.8,
-          activeServers: 10,
-          queriedServers: 8
-        },
         connections: []
       };
       
@@ -220,10 +231,27 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
     onEndpointsChange(updatedEndpoints);
   };
 
+  const handleBlastParamsSave = () => {
+    onBlastParamsChange(editedBlastParams);
+    setShowBlastConfig(false);
+  };
+
+  const handleBlastParamsCancel = () => {
+    setEditedBlastParams(blastParams);
+    setShowBlastConfig(false);
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 relative">
       {/* Controls */}
       <div className="absolute top-4 right-4 flex space-x-2">
+        <button
+          onClick={() => setShowBlastConfig(!showBlastConfig)}
+          className="px-4 py-2 bg-amber-500 text-white rounded-lg font-medium text-sm hover:bg-amber-600 transition-all duration-200"
+        >
+          <Settings className="w-4 h-4 inline mr-2" />
+          BLAST Config
+        </button>
         <button
           onClick={() => setIsAddingNode(!isAddingNode)}
           className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
@@ -245,6 +273,79 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
           )}
         </button>
       </div>
+
+      {/* BLAST Configuration Panel */}
+      {showBlastConfig && (
+        <div className="absolute top-16 right-4 bg-white rounded-xl shadow-2xl border border-slate-200 p-6 z-20 w-80">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-slate-800">Network BLAST Parameters</h3>
+            <button
+              onClick={handleBlastParamsCancel}
+              className="p-1 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <label className="text-slate-600 font-medium block mb-2">Beta Parameter:</label>
+              <input
+                type="number"
+                min="1"
+                max="10"
+                value={editedBlastParams.beta}
+                onChange={(e) => setEditedBlastParams({ ...editedBlastParams, beta: parseInt(e.target.value) })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-amber-500"
+              />
+            </div>
+            <div>
+              <label className="text-slate-600 font-medium block mb-2">Delta Parameter:</label>
+              <input
+                type="number"
+                min="1"
+                max="10"
+                value={editedBlastParams.delta}
+                onChange={(e) => setEditedBlastParams({ ...editedBlastParams, delta: parseInt(e.target.value) })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-amber-500"
+              />
+            </div>
+            <div>
+              <label className="text-slate-600 font-medium block mb-2">Active Servers:</label>
+              <input
+                type="number"
+                min="1"
+                value={editedBlastParams.activeServers}
+                onChange={(e) => setEditedBlastParams({ ...editedBlastParams, activeServers: parseInt(e.target.value) })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+            <div>
+              <label className="text-slate-600 font-medium block mb-2">Queried Servers:</label>
+              <input
+                type="number"
+                min="1"
+                value={editedBlastParams.queriedServers}
+                onChange={(e) => setEditedBlastParams({ ...editedBlastParams, queriedServers: parseInt(e.target.value) })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-slate-500"
+              />
+            </div>
+            <div className="flex justify-end space-x-2 pt-4 border-t border-slate-200">
+              <button
+                onClick={handleBlastParamsCancel}
+                className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBlastParamsSave}
+                className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors duration-200"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <svg
         ref={svgRef}
@@ -406,7 +507,7 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
                 fontFamily="monospace"
                 className="pointer-events-none"
               >
-                {endpoint.ipAddress}
+                {endpoint.geoLocation.city}, {endpoint.geoLocation.state}
               </text>
               {/* Status indicator */}
               <circle
@@ -447,7 +548,11 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({ endpoints, onEndpointsChange 
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Re-keying:</span>
-              <span className="text-slate-300">{hoverInfo.rekeying}</span>
+              <span className="text-slate-300">{hoverInfo.rekeyingInterval}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Next Re-key:</span>
+              <span className="text-emerald-400">{hoverInfo.timeToNextRekeying}s</span>
             </div>
             <div className="border-t border-slate-700 pt-2 mt-2">
               <div className="text-slate-400 text-xs mb-1">Phase 1:</div>

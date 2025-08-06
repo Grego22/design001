@@ -9,8 +9,6 @@ interface SidebarProps {
 const products = [
   { id: 'ipsec-gateway', name: 'IPSec Gateway', icon: Shield, color: 'text-blue-400' },
   { id: 'reports', name: 'Security Reports', icon: BarChart3, color: 'text-slate-400' },
-  { id: 'load-balancer', name: 'Load Balancer', icon: Server, color: 'text-slate-500' },
-  { id: 'network-monitor', name: 'Network Monitor', icon: Network, color: 'text-slate-500' },
   { id: 'system-config', name: 'System Config', icon: Settings, color: 'text-slate-500' },
 ];
 

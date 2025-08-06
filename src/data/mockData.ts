@@ -1,22 +1,27 @@
-import { Endpoint } from '../types/endpoint';
+import { Endpoint, NetworkBlastParams } from '../types/endpoint';
+
+export const networkBlastParams: NetworkBlastParams = {
+  beta: 3,
+  delta: 2,
+  activeServers: 45,
+  queriedServers: 32
+};
 
 export const mockEndpoints: Endpoint[] = [
   {
     id: 'ep-001',
     name: 'gateway-001',
     ipAddress: '192.168.1.10',
+    geoLocation: {
+      city: 'New York',
+      state: 'NY'
+    },
     status: 'active',
     ipsecImplementation: 'StrongSwan 5.9.8',
-    rekeying: '3600s',
+    rekeyingInterval: '3600s',
     phase1Algorithm: 'AES256-SHA256-MODP2048',
     phase2Algorithm: 'AES256-SHA256-PFS',
     authType: 'Certificate',
-    blast: {
-      beta: 3,
-      delta: 1.7,
-      activeServers: 12,
-      queriedServers: 8
-    },
     connections: [
       { 
         target: 'gateway-002', 
@@ -24,7 +29,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES256-SHA256-MODP2048',
         phase2Algorithm: 'AES256-SHA256-PFS',
         authType: 'Certificate',
-        rekeying: '3600s'
+        rekeyingInterval: '3600s',
+        timeToNextRekeying: 2847
       },
       { 
         target: 'gateway-003', 
@@ -32,7 +38,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES128-SHA256-MODP1024',
         phase2Algorithm: 'AES128-SHA256-PFS',
         authType: 'PSK',
-        rekeying: '1800s'
+        rekeyingInterval: '1800s',
+        timeToNextRekeying: 1234
       }
     ]
   },
@@ -40,18 +47,16 @@ export const mockEndpoints: Endpoint[] = [
     id: 'ep-002',
     name: 'gateway-002',
     ipAddress: '192.168.1.11',
+    geoLocation: {
+      city: 'Los Angeles',
+      state: 'CA'
+    },
     status: 'active',
     ipsecImplementation: 'StrongSwan 5.9.8',
-    rekeying: '1800s',
+    rekeyingInterval: '1800s',
     phase1Algorithm: 'AES128-SHA256-MODP1024',
     phase2Algorithm: 'AES128-SHA256-PFS',
     authType: 'PSK',
-    blast: {
-      beta: 4,
-      delta: 2.1,
-      activeServers: 15,
-      queriedServers: 12
-    },
     connections: [
       { 
         target: 'gateway-001', 
@@ -59,7 +64,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES128-SHA256-MODP1024',
         phase2Algorithm: 'AES128-SHA256-PFS',
         authType: 'PSK',
-        rekeying: '1800s'
+        rekeyingInterval: '1800s',
+        timeToNextRekeying: 892
       },
       { 
         target: 'gateway-004', 
@@ -67,7 +73,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES256-SHA384-MODP3072',
         phase2Algorithm: 'AES256-SHA384-PFS',
         authType: 'Certificate',
-        rekeying: '7200s'
+        rekeyingInterval: '7200s',
+        timeToNextRekeying: 5643
       }
     ]
   },
@@ -75,18 +82,16 @@ export const mockEndpoints: Endpoint[] = [
     id: 'ep-003',
     name: 'gateway-003',
     ipAddress: '192.168.1.12',
+    geoLocation: {
+      city: 'Chicago',
+      state: 'IL'
+    },
     status: 'active',
     ipsecImplementation: 'StrongSwan 5.9.7',
-    rekeying: '7200s',
+    rekeyingInterval: '7200s',
     phase1Algorithm: 'AES256-SHA512-MODP4096',
     phase2Algorithm: 'AES256-SHA512-PFS',
     authType: 'Certificate',
-    blast: {
-      beta: 2,
-      delta: 1.4,
-      activeServers: 8,
-      queriedServers: 6
-    },
     connections: [
       { 
         target: 'gateway-001', 
@@ -94,7 +99,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES256-SHA512-MODP4096',
         phase2Algorithm: 'AES256-SHA512-PFS',
         authType: 'Certificate',
-        rekeying: '7200s'
+        rekeyingInterval: '7200s',
+        timeToNextRekeying: 4521
       }
     ]
   },
@@ -102,36 +108,32 @@ export const mockEndpoints: Endpoint[] = [
     id: 'ep-004',
     name: 'gateway-004',
     ipAddress: '192.168.1.13',
+    geoLocation: {
+      city: 'Miami',
+      state: 'FL'
+    },
     status: 'inactive',
     ipsecImplementation: 'StrongSwan 5.9.8',
-    rekeying: '3600s',
+    rekeyingInterval: '3600s',
     phase1Algorithm: 'AES256-SHA256-MODP2048',
     phase2Algorithm: 'AES256-SHA256-PFS',
     authType: 'PSK',
-    blast: {
-      beta: 5,
-      delta: 2.8,
-      activeServers: 0,
-      queriedServers: 0
-    },
     connections: []
   },
   {
     id: 'ep-005',
     name: 'gateway-005',
     ipAddress: '192.168.1.14',
+    geoLocation: {
+      city: 'Seattle',
+      state: 'WA'
+    },
     status: 'active',
     ipsecImplementation: 'StrongSwan 5.9.9',
-    rekeying: '1800s',
+    rekeyingInterval: '1800s',
     phase1Algorithm: 'AES128-SHA256-MODP1024',
     phase2Algorithm: 'AES128-SHA256-PFS',
     authType: 'Certificate',
-    blast: {
-      beta: 3,
-      delta: 1.9,
-      activeServers: 10,
-      queriedServers: 7
-    },
     connections: [
       { 
         target: 'gateway-002', 
@@ -139,7 +141,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES128-SHA256-MODP1024',
         phase2Algorithm: 'AES128-SHA256-PFS',
         authType: 'Certificate',
-        rekeying: '1800s'
+        rekeyingInterval: '1800s',
+        timeToNextRekeying: 1567
       },
       { 
         target: 'gateway-006', 
@@ -147,7 +150,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES256-SHA384-MODP3072',
         phase2Algorithm: 'AES256-SHA384-PFS',
         authType: 'PSK',
-        rekeying: '3600s'
+        rekeyingInterval: '3600s',
+        timeToNextRekeying: 2890
       }
     ]
   },
@@ -155,18 +159,16 @@ export const mockEndpoints: Endpoint[] = [
     id: 'ep-006',
     name: 'gateway-006',
     ipAddress: '192.168.1.15',
+    geoLocation: {
+      city: 'Dallas',
+      state: 'TX'
+    },
     status: 'active',
     ipsecImplementation: 'StrongSwan 5.9.8',
-    rekeying: '3600s',
+    rekeyingInterval: '3600s',
     phase1Algorithm: 'AES256-SHA384-MODP3072',
     phase2Algorithm: 'AES256-SHA384-PFS',
     authType: 'PSK',
-    blast: {
-      beta: 4,
-      delta: 2.3,
-      activeServers: 14,
-      queriedServers: 11
-    },
     connections: [
       { 
         target: 'gateway-005', 
@@ -174,7 +176,8 @@ export const mockEndpoints: Endpoint[] = [
         phase1Algorithm: 'AES256-SHA384-MODP3072',
         phase2Algorithm: 'AES256-SHA384-PFS',
         authType: 'PSK',
-        rekeying: '3600s'
+        rekeyingInterval: '3600s',
+        timeToNextRekeying: 3421
       }
     ]
   }

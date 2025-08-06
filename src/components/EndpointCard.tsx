@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Activity, Key, RefreshCw, Server, Zap, Lock, Cpu, Edit2, Save, X } from 'lucide-react';
+import { Shield, Activity, Key, RefreshCw, Server, Zap, Lock, Cpu, Edit2, Save, X, MapPin } from 'lucide-react';
 import { Endpoint, Connection } from '../types/endpoint';
 
 interface EndpointCardProps {
@@ -30,14 +30,18 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
 
   const updateConnection = (index: number, field: keyof Connection, value: string) => {
     const updatedConnections = [...editedEndpoint.connections];
-    updatedConnections[index] = { ...updatedConnections[index], [field]: value };
+    if (field === 'timeToNextRekeying') {
+      updatedConnections[index] = { ...updatedConnections[index], [field]: value as number };
+    } else {
+      updatedConnections[index] = { ...updatedConnections[index], [field]: value as string };
+    }
     setEditedEndpoint({ ...editedEndpoint, connections: updatedConnections });
   };
 
-  const updateBlast = (field: keyof typeof endpoint.blast, value: number) => {
+  const updateEndpoint = (field: keyof Endpoint, value: any) => {
     setEditedEndpoint({
       ...editedEndpoint,
-      blast: { ...editedEndpoint.blast, [field]: value }
+      [field]: value
     });
   };
 
@@ -78,11 +82,62 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
         </div>
 
         {/* Basic Details */}
-        <div className="space-y-3 mb-6 bg-slate-50 rounded-xl p-4">
+        <div className="space-y-4 mb-6 bg-slate-50 rounded-xl p-4">
           <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wide flex items-center mb-3">
             <Server className="w-4 h-4 mr-2" />
             Gateway Details
           </h4>
+          
+          {/* IP Address */}
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-slate-600 flex items-center font-medium">
+              <Server className="w-4 h-4 mr-2" />
+              IP Address
+            </span>
+            {isEditing ? (
+              <input
+                type="text"
+                value={editedEndpoint.ipAddress}
+                onChange={(e) => updateEndpoint('ipAddress', e.target.value)}
+                className="font-mono text-slate-800 bg-white px-2 py-1 rounded-lg shadow-sm border border-slate-300 focus:outline-none focus:border-blue-500"
+              />
+            ) : (
+              <span className="font-mono text-slate-800 bg-white px-2 py-1 rounded-lg shadow-sm">
+                {endpoint.ipAddress}
+              </span>
+            )}
+          </div>
+          
+          {/* Geo Location */}
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-slate-600 flex items-center font-medium">
+              <MapPin className="w-4 h-4 mr-2" />
+              Location
+            </span>
+            {isEditing ? (
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  placeholder="City"
+                  value={editedEndpoint.geoLocation.city}
+                  onChange={(e) => updateEndpoint('geoLocation', { ...editedEndpoint.geoLocation, city: e.target.value })}
+                  className="text-slate-800 bg-white px-2 py-1 rounded-lg shadow-sm border border-slate-300 focus:outline-none focus:border-blue-500 w-20"
+                />
+                <input
+                  type="text"
+                  placeholder="State"
+                  value={editedEndpoint.geoLocation.state}
+                  onChange={(e) => updateEndpoint('geoLocation', { ...editedEndpoint.geoLocation, state: e.target.value })}
+                  className="text-slate-800 bg-white px-2 py-1 rounded-lg shadow-sm border border-slate-300 focus:outline-none focus:border-blue-500 w-16"
+                />
+              </div>
+            ) : (
+              <span className="font-medium text-slate-800 bg-white px-2 py-1 rounded-lg shadow-sm">
+                {endpoint.geoLocation.city}, {endpoint.geoLocation.state}
+              </span>
+            )}
+          </div>
+          
           <div className="flex items-center justify-between text-sm">
             <span className="text-slate-600 flex items-center font-medium">
               <Server className="w-4 h-4 mr-2" />
@@ -91,88 +146,6 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
             <span className="font-bold text-slate-800 bg-white px-2 py-1 rounded-lg shadow-sm">
               {endpoint.ipsecImplementation}
             </span>
-          </div>
-        </div>
-
-        {/* BLAST Parameters */}
-        <div className="bg-amber-50 rounded-xl p-5 mb-6 border border-amber-200">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center">
-              <div className="p-2 bg-amber-500 rounded-lg mr-3">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wide">BLAST Parameters</h4>
-            </div>
-            {isEditing && (
-              <button
-                onClick={handleSave}
-                className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium hover:bg-blue-600 transition-colors duration-200"
-              >
-                <Save className="w-3 h-3 inline mr-1" />
-                Save
-              </button>
-            )}
-          </div>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="bg-white rounded-lg p-3 shadow-sm">
-              <span className="text-slate-600 font-medium block mb-1">Beta Parameter:</span>
-              {isEditing ? (
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={editedEndpoint.blast.beta}
-                  onChange={(e) => updateBlast('beta', parseInt(e.target.value))}
-                  className="w-full text-2xl font-bold text-amber-600 bg-transparent border-b border-amber-300 focus:outline-none focus:border-amber-500"
-                />
-              ) : (
-                <span className="text-2xl font-bold text-amber-600">
-                  {endpoint.blast.beta}
-                </span>
-              )}
-            </div>
-            <div className="bg-white rounded-lg p-3 shadow-sm">
-              <span className="text-slate-600 font-medium block mb-1">Delta Parameter:</span>
-              {isEditing ? (
-                <input
-                  type="number"
-                  step="0.1"
-                  value={editedEndpoint.blast.delta}
-                  onChange={(e) => updateBlast('delta', parseFloat(e.target.value))}
-                  className="w-full text-2xl font-bold text-amber-600 bg-transparent border-b border-amber-300 focus:outline-none focus:border-amber-500"
-                />
-              ) : (
-                <span className="text-2xl font-bold text-amber-600">
-                  {endpoint.blast.delta}
-                </span>
-              )}
-            </div>
-            <div className="bg-white rounded-lg p-3 shadow-sm">
-              <span className="text-slate-600 font-medium block mb-1">Active Servers:</span>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={editedEndpoint.blast.activeServers}
-                  onChange={(e) => updateBlast('activeServers', parseInt(e.target.value))}
-                  className="w-full text-2xl font-bold text-emerald-600 bg-transparent border-b border-emerald-300 focus:outline-none focus:border-emerald-500"
-                />
-              ) : (
-                <span className="text-2xl font-bold text-emerald-600">{endpoint.blast.activeServers}</span>
-              )}
-            </div>
-            <div className="bg-white rounded-lg p-3 shadow-sm">
-              <span className="text-slate-600 font-medium block mb-1">Queried Servers:</span>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={editedEndpoint.blast.queriedServers}
-                  onChange={(e) => updateBlast('queriedServers', parseInt(e.target.value))}
-                  className="w-full text-2xl font-bold text-slate-600 bg-transparent border-b border-slate-300 focus:outline-none focus:border-slate-500"
-                />
-              ) : (
-                <span className="text-2xl font-bold text-slate-600">{endpoint.blast.queriedServers}</span>
-              )}
-            </div>
           </div>
         </div>
 
@@ -205,14 +178,25 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
                   <div className="space-y-3 border-t border-slate-200 pt-3">
                     <div className="grid grid-cols-2 gap-3 text-xs">
                       <div>
-                        <label className="text-slate-600 font-medium block mb-1">Re-keying:</label>
+                        <label className="text-slate-600 font-medium block mb-1">Re-keying Interval:</label>
                         <input
                           type="text"
-                          value={editedEndpoint.connections[index]?.rekeying || ''}
-                          onChange={(e) => updateConnection(index, 'rekeying', e.target.value)}
+                          value={editedEndpoint.connections[index]?.rekeyingInterval || ''}
+                          onChange={(e) => updateConnection(index, 'rekeyingInterval', e.target.value)}
                           className="w-full px-2 py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500"
                         />
                       </div>
+                      <div>
+                        <label className="text-slate-600 font-medium block mb-1">Next Re-key (sec):</label>
+                        <input
+                          type="number"
+                          value={editedEndpoint.connections[index]?.timeToNextRekeying || 0}
+                          onChange={(e) => updateConnection(index, 'timeToNextRekeying', parseInt(e.target.value))}
+                          className="w-full px-2 py-1 border border-slate-300 rounded focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 text-xs">
                       <div>
                         <label className="text-slate-600 font-medium block mb-1">Auth Type:</label>
                         <select
@@ -263,8 +247,12 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
                 {editingConnection !== index && (
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Re-keying:</span>
-                      <span className="font-medium text-slate-800">{conn.rekeying || endpoint.rekeying}</span>
+                      <span className="text-slate-600">Re-keying Interval:</span>
+                      <span className="font-medium text-slate-800">{conn.rekeyingInterval || endpoint.rekeyingInterval}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-600">Next Re-key:</span>
+                      <span className="font-medium text-emerald-600">{conn.timeToNextRekeying || 0}s</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-600">Auth:</span>
