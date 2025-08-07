@@ -7,10 +7,10 @@ interface SidebarProps {
 }
 
 const products = [
-  { id: 'ipsec-gateway', name: 'IPSec Gateway', icon: Shield, color: 'text-blue-400' },
-  { id: 'heatmap', name: 'Network Heatmap', icon: Network, color: 'text-emerald-400' },
-  { id: 'reports', name: 'Security Reports', icon: BarChart3, color: 'text-slate-400' },
-  { id: 'system-config', name: 'System Config', icon: Settings, color: 'text-slate-500' },
+  { id: 'ipsec-gateway', name: 'IPSec Gateway', icon: Shield, color: 'text-slate-600' },
+  { id: 'heatmap', name: 'Network Heatmap', icon: Network, color: 'text-slate-600' },
+  { id: 'reports', name: 'Reports', icon: BarChart3, color: 'text-slate-600' },
+  { id: 'system-config', name: 'System Config', icon: Settings, color: 'text-slate-600' },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) => {
@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
                   }`}
                 >
                   <Icon className={`w-5 h-5 mr-3 transition-colors duration-300 ${
-                    isSelected ? 'text-blue-400' : `${product.color} group-hover:text-white`
+                    isSelected ? 'text-blue-400' : `${product.color} group-hover:text-slate-300`
                   }`} />
                   <span className="font-medium text-sm">{product.name}</span>
                 </button>
