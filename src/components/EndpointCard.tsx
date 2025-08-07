@@ -270,7 +270,14 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-600">Next Re-key:</span>
-                      <span className="font-medium text-emerald-600">{conn.timeToNextRekeying || 0}s</span>
+                      <span className="font-medium text-emerald-600">
+                        {(() => {
+                          const totalSeconds = conn.timeToNextRekeying || 0;
+                          const minutes = Math.floor(totalSeconds / 60);
+                          const seconds = totalSeconds % 60;
+                          return `${minutes}m ${seconds}s`;
+                        })()}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-600">Auth:</span>
