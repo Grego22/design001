@@ -30,7 +30,6 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-800">Reports</h1>
-              <p className="text-slate-600">Comprehensive analysis and monitoring dashboard</p>
             </div>
           </div>
         </div>
@@ -78,7 +77,7 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
           </div>
         </div>
 
-        {/* Security Analysis */}
+        {/* Security Analysis - removed BLAST Parameters from here */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
@@ -113,44 +112,24 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
-              BLAST Parameters
-            </h3>
-            <div className="space-y-4">
-              <div className="p-4 bg-slate-50 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium text-slate-700">Network Beta</span>
-                  <span className="text-2xl font-bold text-blue-600">{blastParams.beta}</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full" 
-                    style={{ width: `${(blastParams.beta / 10) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div className="p-4 bg-slate-50 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium text-slate-700">Network Delta</span>
-                  <span className="text-2xl font-bold text-emerald-600">{blastParams.delta}</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div 
-                    className="bg-emerald-600 h-2 rounded-full" 
-                    style={{ width: `${(blastParams.delta / 10) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div className="p-4 bg-slate-50 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-slate-700">Active/Queried Servers</span>
-                  <span className="text-lg font-bold text-amber-600">
-                    {blastParams.activeServers}/{blastParams.queriedServers}
-                  </span>
-                </div>
-              </div>
+          {/* Empty space where BLAST Parameters used to be */}
+          <div></div>
+        </div>
+
+        {/* Available Reports */}
+        <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6 mb-8">
+          <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+            <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
+            Available Reports
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+              <span className="font-medium text-slate-700">Current Active Connections</span>
+            </div>
+            <div className="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="w-2 h-2 bg-emerald-600 rounded-full mr-3"></div>
+              <span className="font-medium text-slate-700">Endpoints with ML-KEM</span>
             </div>
           </div>
         </div>
@@ -209,6 +188,48 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* BLAST Parameters - moved to bottom */}
+        <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6 mt-8">
+          <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+            <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+            BLAST Parameters
+          </h3>
+          <div className="space-y-4">
+            <div className="p-4 bg-slate-50 rounded-lg">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-medium text-slate-700">Network Beta</span>
+                <span className="text-2xl font-bold text-blue-600">{blastParams.beta}</span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full" 
+                  style={{ width: `${(blastParams.beta / 10) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+            <div className="p-4 bg-slate-50 rounded-lg">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-medium text-slate-700">Network Delta</span>
+                <span className="text-2xl font-bold text-emerald-600">{blastParams.delta}</span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-2">
+                <div 
+                  className="bg-emerald-600 h-2 rounded-full" 
+                  style={{ width: `${(blastParams.delta / 10) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+            <div className="p-4 bg-slate-50 rounded-lg">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-slate-700">Active/Queried Servers</span>
+                <span className="text-lg font-bold text-amber-600">
+                  {blastParams.activeServers}/{blastParams.queriedServers}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
