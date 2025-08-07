@@ -879,6 +879,10 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
             <div className="w-3 h-3 bg-amber-500 rounded-full mr-2 animate-pulse"></div>
             <span className="text-slate-600">Registration Token</span>
           </div>
+          <div className="flex items-center">
+            <div className="w-4 h-1 bg-red-500 mr-2"></div>
+            <span className="text-slate-600">Drag from gateway to gateway to connect</span>
+          </div>
         </div>
       </div>
     </div>
