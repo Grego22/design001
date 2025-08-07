@@ -301,6 +301,7 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
         phase1Algorithm: 'AES256-SHA256-MODP2048',
         phase2Algorithm: 'AES256-SHA256-PFS',
         authType: 'Certificate',
+        blastVersion: 'v0.11.23',
         connections: [],
         registrationToken: token,
         tokenExpiry: now + 300000, // 5 minutes

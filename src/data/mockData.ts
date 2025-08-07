@@ -22,6 +22,7 @@ export const mockEndpoints: Endpoint[] = [
     phase1Algorithm: 'AES256-SHA256-MODP2048',
     phase2Algorithm: 'AES256-SHA256-PFS',
     authType: 'Certificate',
+    blastVersion: 'v0.11.23',
     connections: [
       { 
         target: 'gateway-002', 
@@ -57,6 +58,7 @@ export const mockEndpoints: Endpoint[] = [
     phase1Algorithm: 'AES128-SHA256-MODP1024',
     phase2Algorithm: 'AES128-SHA256-PFS',
     authType: 'PSK',
+    blastVersion: 'v0.11.22',
     connections: [
       { 
         target: 'gateway-001', 
@@ -92,6 +94,7 @@ export const mockEndpoints: Endpoint[] = [
     phase1Algorithm: 'AES256-SHA512-MODP4096',
     phase2Algorithm: 'AES256-SHA512-PFS',
     authType: 'Certificate',
+    blastVersion: 'v0.11.23',
     connections: [
       { 
         target: 'gateway-001', 
@@ -118,6 +121,7 @@ export const mockEndpoints: Endpoint[] = [
     phase1Algorithm: 'AES256-SHA256-MODP2048',
     phase2Algorithm: 'AES256-SHA256-PFS',
     authType: 'PSK',
+    blastVersion: 'v0.11.22',
     connections: []
   },
   {
@@ -134,6 +138,7 @@ export const mockEndpoints: Endpoint[] = [
     phase1Algorithm: 'AES128-SHA256-MODP1024',
     phase2Algorithm: 'AES128-SHA256-PFS',
     authType: 'Certificate',
+    blastVersion: 'v0.11.23',
     connections: [
       { 
         target: 'gateway-002', 
@@ -169,6 +174,7 @@ export const mockEndpoints: Endpoint[] = [
     phase1Algorithm: 'AES256-SHA384-MODP3072',
     phase2Algorithm: 'AES256-SHA384-PFS',
     authType: 'PSK',
+    blastVersion: 'v0.11.23',
     connections: [
       { 
         target: 'gateway-005', 

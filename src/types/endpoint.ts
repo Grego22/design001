@@ -33,4 +33,5 @@ export interface Endpoint {
   registrationToken?: string;
   tokenExpiry?: number;
   createdAt?: number;
+  blastVersion?: string;
 }

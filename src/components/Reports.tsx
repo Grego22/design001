@@ -149,6 +149,7 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
                   <th className="text-left py-3 px-4 font-semibold text-slate-700">Implementation</th>
                   <th className="text-left py-3 px-4 font-semibold text-slate-700">Auth Type</th>
                   <th className="text-left py-3 px-4 font-semibold text-slate-700">Connections</th>
+                  <th className="text-left py-3 px-4 font-semibold text-slate-700">BLAST Version</th>
                   <th className="text-left py-3 px-4 font-semibold text-slate-700">Location</th>
                 </tr>
               </thead>
@@ -181,6 +182,15 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
                       </span>
                     </td>
                     <td className="py-3 px-4 text-sm text-slate-600">{endpoint.connections.length}</td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        endpoint.blastVersion === 'v0.11.23' 
+                          ? 'bg-emerald-100 text-emerald-800' 
+                          : 'bg-amber-100 text-amber-800'
+                      }`}>
+                        {endpoint.blastVersion || 'N/A'}
+                      </span>
+                    </td>
                     <td className="py-3 px-4 text-sm text-slate-600">
                       {endpoint.geoLocation.city}, {endpoint.geoLocation.state}
                     </td>
