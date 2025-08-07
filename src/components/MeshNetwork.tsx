@@ -34,6 +34,13 @@ interface DragState {
   currentPos: Position | null;
 }
 
+interface ConnectionFeedback {
+  visible: boolean;
+  source: string;
+  target: string;
+  x: number;
+  y: number;
+}
 const MeshNetwork: React.FC<MeshNetworkProps> = ({ 
   endpoints, 
   onEndpointsChange, 
@@ -63,6 +70,13 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
     currentPos: null
   });
 
+  const [connectionFeedback, setConnectionFeedback] = useState<ConnectionFeedback>({
+    visible: false,
+    source: '',
+    target: '',
+    x: 0,
+    y: 0
+  });
   const [isAddingNode, setIsAddingNode] = useState(false);
   const [showTokenModal, setShowTokenModal] = useState(false);
   const [newGatewayToken, setNewGatewayToken] = useState<{
@@ -197,11 +211,14 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
     event.stopPropagation();
     
     if (dragState.isDragging && dragState.sourceNode && targetNode && targetNode !== dragState.sourceNode) {
-      // Create new connection
-      const updatedEndpoints = endpoints.map(ep => {
-        if (ep.name === dragState.sourceNode) {
-          const existingConnection = ep.connections.find(conn => conn.target === targetNode);
-          if (!existingConnection) {
+      // Check if connection already exists
+      const sourceEndpoint = endpoints.find(ep => ep.name === dragState.sourceNode);
+      const existingConnection = sourceEndpoint?.connections.find(conn => conn.target === targetNode);
+      
+      if (!existingConnection) {
+        // Create new connection
+        const updatedEndpoints = endpoints.map(ep => {
+          if (ep.name === dragState.sourceNode) {
             return {
               ...ep,
               connections: [...ep.connections, {
@@ -215,10 +232,27 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
               }]
             };
           }
+          return ep;
+        });
+        onEndpointsChange(updatedEndpoints);
+        
+        // Show connection success feedback
+        const rect = svgRef.current?.getBoundingClientRect();
+        if (rect) {
+          setConnectionFeedback({
+            visible: true,
+            source: dragState.sourceNode,
+            target: targetNode,
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+          });
+          
+          // Hide feedback after 3 seconds
+          setTimeout(() => {
+            setConnectionFeedback(prev => ({ ...prev, visible: false }));
+          }, 3000);
         }
-        return ep;
-      });
-      onEndpointsChange(updatedEndpoints);
+      }
     }
     
     setDragState({
@@ -760,6 +794,26 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
           );
         })}
       </svg>
+
+      {/* Connection Success Feedback */}
+      {connectionFeedback.visible && (
+        <div
+          className="absolute bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-2xl border border-emerald-500 z-20 pointer-events-none animate-pulse"
+          style={{
+            left: connectionFeedback.x - 100,
+            top: connectionFeedback.y - 40,
+            transform: 'translateX(-50%)'
+          }}
+        >
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-white rounded-full"></div>
+            <span className="text-sm font-bold">
+              Connection Created: {connectionFeedback.source} → {connectionFeedback.target}
+            </span>
+            <div className="w-3 h-3 bg-white rounded-full"></div>
+          </div>
+        </div>
+      )}
 
       {/* Hover tooltip */}
       {hoverInfo.visible && (
