@@ -300,6 +300,23 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint, onEndpointChange 
                       <div className="font-mono text-xs bg-slate-600 text-white px-2 py-1 rounded">
                         {conn.phase2Algorithm || endpoint.phase2Algorithm}
                       </div>
+                     <div className="mt-2 space-y-1">
+                       <div className="text-xs">
+                         <span className="text-slate-600">Encryption:</span>
+                         <span className="ml-2 font-mono text-slate-800">AES-GCM-256</span>
+                       </div>
+                       <div className="text-xs">
+                         <span className="text-slate-600">Key Exchange:</span>
+                       </div>
+                       <div className="text-xs ml-4">
+                         <span className="text-slate-600">KE1:</span>
+                         <span className="ml-2 font-mono text-slate-800">Kyber L3 (ML-KEM)</span>
+                       </div>
+                       <div className="text-xs ml-4">
+                         <span className="text-slate-600">KE2:</span>
+                         <span className="ml-2 font-mono text-slate-800">BLAST</span>
+                       </div>
+                     </div>
                     </div>
                   </div>
                 )}
