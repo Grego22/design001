@@ -7,7 +7,7 @@ interface SidebarProps {
 }
 
 const products = [
-  { id: 'ipsec-gateway', name: 'IPSec Gateway', icon: Shield, color: 'text-slate-600' },
+  { id: 'ipsec-gateway', name: 'Quantum Secure Networking', icon: Shield, color: 'text-slate-600' },
   { id: 'heatmap', name: 'Network Heatmap', icon: Network, color: 'text-slate-600' },
   { id: 'reports', name: 'Reports', icon: BarChart3, color: 'text-slate-600' },
   { id: 'system-config', name: 'System Config', icon: Settings, color: 'text-slate-600' },
@@ -25,7 +25,6 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
             <h1 className="text-xl font-bold text-blue-400">
               QryptoAgility
             </h1>
-            <p className="text-xs text-slate-400 font-medium tracking-wide">ENTERPRISE SECURITY</p>
           </div>
         </div>
       </div>

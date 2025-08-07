@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, X, Settings, Copy, CheckCircle } from 'lucide-react';
+import { Plus, X, Settings, Copy, CheckCircle, RotateCcw } from 'lucide-react';
 import { Endpoint, Connection, NetworkBlastParams } from '../types/endpoint';
 
 interface MeshNetworkProps {
@@ -71,6 +71,7 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
     expiry: number;
   } | null>(null);
   const [copiedToken, setCopiedToken] = useState(false);
+  const [showForceRekeyModal, setShowForceRekeyModal] = useState(false);
 
   // Calculate positions for endpoints in a circular layout
   const getEndpointPositions = (): { [key: string]: Position } => {
@@ -296,6 +297,13 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
     onEndpointsChange(updatedEndpoints);
   };
 
+  const handleForceRekey = () => {
+    // Here you would implement the actual re-keying logic
+    // For now, we'll just close the modal
+    setShowForceRekeyModal(false);
+    // You could add logic here to trigger re-keying on all active connections
+  };
+
   const handleBlastParamsSave = () => {
     onBlastParamsChange(editedBlastParams);
     setShowBlastConfig(false);
@@ -310,6 +318,13 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
     <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 relative">
       {/* Controls */}
       <div className="absolute top-4 right-4 flex space-x-2">
+        <button
+          onClick={() => setShowForceRekeyModal(true)}
+          className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium text-sm hover:bg-red-600 transition-all duration-200"
+        >
+          <RotateCcw className="w-4 h-4 inline mr-2" />
+          Force Rekey
+        </button>
         <button
           onClick={() => setShowBlastConfig(!showBlastConfig)}
           className="px-4 py-2 bg-amber-500 text-white rounded-lg font-medium text-sm hover:bg-amber-600 transition-all duration-200"
@@ -406,6 +421,44 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
                 className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors duration-200"
               >
                 Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Force Rekey Modal */}
+      {showForceRekeyModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30">
+          <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-8 max-w-md w-full mx-4">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-slate-800">Force Re-key Confirmation</h3>
+              <button
+                onClick={() => setShowForceRekeyModal(false)}
+                className="p-1 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="mb-6">
+              <p className="text-slate-700 text-center">
+                Are you sure you want to rekey all active connections?
+              </p>
+            </div>
+            
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => setShowForceRekeyModal(false)}
+                className="px-6 py-2 bg-slate-500 text-white rounded-lg hover:bg-slate-600 transition-colors duration-200"
+              >
+                No
+              </button>
+              <button
+                onClick={handleForceRekey}
+                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+              >
+                Yes
               </button>
             </div>
           </div>
@@ -748,19 +801,8 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
         </div>
       )}
 
-      {/* Instructions */}
-      <div className="absolute bottom-4 left-4 bg-slate-50 rounded-lg p-4 border border-slate-200">
-        <div className="text-sm font-bold text-slate-800 mb-2">Instructions</div>
-        <div className="space-y-1 text-xs text-slate-600">
-          <div>• Click "Add Gateway" then click on canvas to place</div>
-          <div>• Drag from one node to another to create connection</div>
-          <div>• Hover over connections to see tunnel details</div>
-          <div>• Click × on connection midpoint to delete</div>
-        </div>
-      </div>
-
       {/* Legend */}
-      <div className="absolute bottom-4 right-4 bg-slate-50 rounded-lg p-4 border border-slate-200">
+      <div className="absolute bottom-4 left-4 bg-slate-50 rounded-lg p-4 border border-slate-200">
         <div className="text-sm font-bold text-slate-800 mb-2">Legend</div>
         <div className="space-y-2 text-xs">
           <div className="flex items-center">

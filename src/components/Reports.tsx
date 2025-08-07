@@ -29,7 +29,7 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
               <BarChart3 className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-800">Security Reports</h1>
+              <h1 className="text-3xl font-bold text-slate-800">Reports</h1>
               <p className="text-slate-600">Comprehensive analysis and monitoring dashboard</p>
             </div>
           </div>
