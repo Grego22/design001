@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, TrendingUp, Shield, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { BarChart3, TrendingUp, Shield, AlertTriangle, CheckCircle, Clock, Activity } from 'lucide-react';
 import { Endpoint, NetworkBlastParams } from '../types/endpoint';
 
 interface ReportsProps {
