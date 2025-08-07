@@ -41,7 +41,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center">
-                <div className="p-3 bg-emerald-600 rounded-xl shadow-lg">
+                <div className="p-3 bg-slate-600 rounded-xl shadow-lg">
                   <Activity className="w-6 h-6 text-white" />
                 </div>
                 <div className="ml-4">
@@ -53,7 +53,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             
             <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center">
-                <div className="p-3 bg-blue-600 rounded-xl shadow-lg">
+                <div className="p-3 bg-slate-600 rounded-xl shadow-lg">
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <div className="ml-4">
@@ -77,7 +77,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
             <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center">
-                <div className="p-3 bg-amber-600 rounded-xl shadow-lg">
+                <div className="p-3 bg-slate-600 rounded-xl shadow-lg">
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div className="ml-4">
