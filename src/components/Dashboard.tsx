@@ -27,7 +27,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-6">
             <div className="p-3 bg-blue-600 rounded-2xl shadow-xl">
-              <Shield className="w-8 h-8 text-white" />
+              <img src="/src/assets/QRY_logo_ symbol_ dark.svg" alt="Qrypt Logo" className="w-8 h-8" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-800">
@@ -91,9 +91,8 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         {/* Mesh Network Visualization */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center">
-            <Network className="w-6 h-6 mr-3 text-blue-600" />
-            Interactive Network Mesh Topology
+          <h2 className="text-xl font-bold text-slate-800 mb-6">
+            BLAST IPSec Tunnels
           </h2>
           <MeshNetwork 
             endpoints={endpoints} 

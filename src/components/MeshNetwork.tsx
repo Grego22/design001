@@ -702,7 +702,7 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
                 fill={endpoint.status === 'active' ? '#3b82f6' : '#64748b'}
                 stroke="white"
                 strokeWidth="4"
-                className={`hover:scale-110 transition-transform duration-200 ${
+                className={`transition-colors duration-200 ${
                   dragState.isDragging ? 'cursor-crosshair' : 'cursor-grab'
                 }`}
                 filter="url(#glow)"
