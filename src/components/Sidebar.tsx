@@ -19,7 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
       <div className="p-6 border-b border-gray-800">
         <div className="flex items-center space-x-3 mb-2">
           <div className="p-2 bg-blue-600 rounded-lg shadow-lg">
-            <img src="/src/assets/QRY_logo_ symbol_ dark.svg" alt="Qrypt Logo" className="w-6 h-6" />
+            <img src="/src/assets/QRY_social thumbnail_ symbol_ dark .png" alt="Qrypt Logo" className="w-6 h-6" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">
