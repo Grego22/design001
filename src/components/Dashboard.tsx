@@ -28,7 +28,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           <div className="flex items-center space-x-4 mb-6">
             <div>
               <h1 className="text-3xl font-bold text-slate-800">
-                Quantum Secure Networking
+                Qrypt Quantum Secure Networking
               </h1>
               <p className="text-slate-600">Advanced cryptographic endpoint management with BLAST integration</p>
             </div>
