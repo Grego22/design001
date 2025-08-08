@@ -26,9 +26,6 @@ const Dashboard: React.FC<DashboardProps> = ({
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-6">
-            <div className="p-3 bg-blue-600 rounded-2xl shadow-xl">
-              <img src="/src/assets/QRY_logo_ symbol_ dark.svg" alt="Qrypt Logo" className="w-8 h-8" />
-            </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-800">
                 Quantum Secure Networking
