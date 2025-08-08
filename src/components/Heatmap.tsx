@@ -98,10 +98,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
   const maxValue = Math.max(...metricValues, 1);
 
   // Convert lat/lng to SVG coordinates
-  const mapWidth = 900;
+  const mapWidth = 1000;
   const mapHeight = 600;
-  const latRange = { min: 24, max: 49 }; // Approximate US latitude range
-  const lngRange = { min: -125, max: -66 }; // Approximate US longitude range
+  const latRange = { min: 24.5, max: 49.4 }; // More precise US latitude range
+  const lngRange = { min: -125, max: -66.9 }; // More precise US longitude range
 
   const getCoordinates = (endpoint: Endpoint) => {
     const coords = cityCoordinates[endpoint.geoLocation.city] || cityCoordinates['New City'];
@@ -190,35 +190,40 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
               
               <rect width="100%" height="100%" fill="url(#mapGrid)" />
               
-              {/* Simplified US Map Outline */}
-              <g stroke="#94a3b8" strokeWidth="2" fill="none" opacity="0.6">
-                {/* Continental US outline (simplified) */}
-                <path d="M 150 450 L 100 400 L 80 350 L 90 300 L 120 250 L 150 200 L 200 150 L 300 120 L 400 100 L 500 110 L 600 120 L 700 140 L 750 180 L 780 220 L 800 280 L 820 350 L 800 400 L 750 450 L 700 480 L 600 500 L 500 510 L 400 500 L 300 480 L 200 460 Z" />
+              {/* Detailed US Map Outline */}
+              <g stroke="#64748b" strokeWidth="2" fill="#f8fafc" fillOpacity="0.8" opacity="0.9">
+                {/* Continental US - More accurate outline */}
+                <path d="M 158 520 L 140 500 L 120 480 L 100 450 L 85 420 L 75 390 L 70 360 L 75 330 L 85 300 L 100 270 L 120 240 L 145 215 L 175 195 L 210 180 L 250 170 L 290 165 L 330 162 L 370 160 L 410 158 L 450 157 L 490 158 L 530 160 L 570 163 L 610 167 L 650 172 L 690 178 L 730 185 L 770 193 L 810 202 L 845 215 L 875 230 L 900 248 L 920 268 L 935 290 L 945 315 L 950 340 L 948 365 L 943 390 L 935 415 L 925 440 L 910 465 L 890 485 L 865 500 L 835 510 L 800 515 L 765 518 L 730 520 L 695 521 L 660 520 L 625 518 L 590 515 L 555 510 L 520 505 L 485 500 L 450 495 L 415 490 L 380 485 L 345 480 L 310 475 L 275 470 L 240 465 L 205 460 L 175 455 L 158 520 Z" />
                 
                 {/* Florida */}
-                <path d="M 650 450 L 680 480 L 700 520 L 720 550 L 680 560 L 650 540 L 640 500 Z" />
+                <path d="M 735 450 L 750 465 L 765 485 L 780 505 L 795 525 L 810 545 L 820 565 L 815 575 L 800 580 L 780 575 L 760 565 L 745 550 L 735 535 L 730 520 L 728 505 L 730 490 L 735 475 L 735 450 Z" />
                 
-                {/* Texas outline */}
-                <path d="M 350 350 L 400 380 L 450 400 L 480 450 L 450 480 L 400 470 L 350 450 L 320 400 Z" />
+                {/* Texas - More accurate shape */}
+                <path d="M 420 380 L 460 385 L 500 395 L 535 410 L 565 430 L 585 455 L 595 485 L 590 515 L 575 540 L 550 555 L 520 565 L 485 570 L 450 568 L 415 560 L 385 545 L 360 525 L 345 500 L 340 470 L 345 440 L 360 415 L 380 395 L 405 385 L 420 380 Z" />
                 
-                {/* California outline */}
-                <path d="M 80 200 L 100 250 L 120 350 L 140 450 L 120 480 L 100 450 L 90 400 L 80 350 L 70 300 L 75 250 Z" />
-              </g>
-
-              {/* State boundary lines */}
-              <g stroke="#cbd5e1" strokeWidth="1" fill="none" opacity="0.4">
-                {/* Vertical lines (longitude) */}
-                <line x1="200" y1="100" x2="180" y2="500" />
-                <line x1="300" y1="100" x2="280" y2="500" />
-                <line x1="400" y1="100" x2="380" y2="500" />
-                <line x1="500" y1="100" x2="480" y2="500" />
-                <line x1="600" y1="120" x2="580" y2="500" />
-                <line x1="700" y1="140" x2="680" y2="500" />
+                {/* California - More accurate coastline */}
+                <path d="M 75 330 L 80 300 L 88 270 L 98 240 L 110 210 L 125 185 L 140 165 L 155 150 L 170 140 L 185 135 L 200 138 L 210 145 L 215 155 L 218 170 L 220 185 L 222 200 L 225 220 L 228 240 L 230 260 L 232 280 L 235 300 L 238 320 L 240 340 L 242 360 L 245 380 L 248 400 L 250 420 L 252 440 L 255 460 L 258 480 L 260 500 L 255 515 L 245 525 L 230 530 L 210 528 L 190 520 L 170 505 L 150 485 L 135 460 L 125 430 L 120 400 L 115 370 L 110 340 L 105 310 L 100 280 L 95 250 L 90 220 L 85 190 L 80 160 L 75 330 Z" />
                 
-                {/* Horizontal lines (latitude) */}
-                <line x1="80" y1="200" x2="800" y2="180" />
-                <line x1="90" y1="300" x2="820" y2="280" />
-                <line x1="120" y1="400" x2="800" y2="380" />
+                {/* Great Lakes region */}
+                <path d="M 650 220 L 680 215 L 710 218 L 735 225 L 755 235 L 770 248 L 780 265 L 785 285 L 780 305 L 770 320 L 755 330 L 735 335 L 710 332 L 680 325 L 655 315 L 635 300 L 625 280 L 630 260 L 640 240 L 650 220 Z" fill="none" stroke="#3b82f6" strokeWidth="1" opacity="0.6" />
+                
+                {/* Additional state boundaries - major ones */}
+                <g stroke="#cbd5e1" strokeWidth="1" fill="none" opacity="0.5">
+                  {/* North-South lines (longitude approximations) */}
+                  <line x1="280" y1="160" x2="260" y2="520" />
+                  <line x1="380" y1="158" x2="360" y2="520" />
+                  <line x1="480" y1="158" x2="460" y2="520" />
+                  <line x1="580" y1="163" x2="560" y2="520" />
+                  <line x1="680" y1="178" x2="660" y2="520" />
+                  <line x1="780" y1="193" x2="760" y2="520" />
+                  
+                  {/* East-West lines (latitude approximations) */}
+                  <line x1="75" y1="240" x2="920" y2="268" />
+                  <line x1="85" y1="300" x2="945" y2="315" />
+                  <line x1="100" y1="360" x2="950" y2="340" />
+                  <line x1="120" y1="420" x2="943" y2="390" />
+                  <line x1="140" y1="480" x2="925" y2="440" />
+                </g>
               </g>
 
               {/* Connection lines */}
