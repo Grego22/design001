@@ -18,7 +18,9 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
     <div className="w-72 bg-black shadow-2xl border-r border-gray-800 flex flex-col">
       <div className="p-6 border-b border-gray-800">
         <div className="flex items-center space-x-3 mb-2">
-          <img src="/src/assets/QRY_social thumbnail_ symbol_ dark .png" alt="Qrypt Logo" className="w-12 h-12" />
+          <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+            <span className="text-white text-xl font-bold">Q</span>
+          </div>
           <div>
             <h1 className="text-2xl font-bold text-white">
               Qrypt
