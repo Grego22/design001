@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Reports from './components/Reports';
 import Heatmap from './components/Heatmap';
+import SystemConfig from './components/SystemConfig';
 import { mockEndpoints, networkBlastParams } from './data/mockData';
 import { NetworkBlastParams } from './types/endpoint';
 
@@ -31,6 +32,9 @@ function App() {
         )}
         {selectedProduct === 'reports' && (
           <Reports endpoints={endpoints} blastParams={blastParams} />
+        )}
+        {selectedProduct === 'system-config' && (
+          <SystemConfig />
         )}
       </main>
     </div>
