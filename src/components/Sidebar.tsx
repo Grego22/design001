@@ -19,11 +19,20 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
       <div className="p-6 border-b border-gray-800">
         <div className="flex items-center space-x-3 mb-2">
           <div className="w-12 h-12 flex items-center justify-center">
-            <img 
-              src="/src/assets/QRY_logo_ symbol_ dark.svg" 
-              alt="Qrypt Logo" 
-             className="w-10 h-10 object-contain filter brightness-300 contrast-150 saturate-150"
-            />
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img 
+                src="/src/assets/QRY_logo_ symbol_ dark.svg" 
+                alt="Qrypt Logo" 
+                className="w-full h-full object-contain invert brightness-200"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              <div className="w-full h-full bg-blue-600 rounded-lg items-center justify-center text-white font-bold text-xl hidden">
+                Q
+              </div>
+            </div>
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">
