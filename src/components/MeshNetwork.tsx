@@ -50,6 +50,7 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const [showBlastConfig, setShowBlastConfig] = useState(false);
   const [editedBlastParams, setEditedBlastParams] = useState<NetworkBlastParams>(blastParams);
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const [hoverInfo, setHoverInfo] = useState<HoverInfo>({
     visible: false,
     x: 0,
@@ -87,6 +88,38 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
   const [copiedToken, setCopiedToken] = useState(false);
   const [showForceRekeyModal, setShowForceRekeyModal] = useState(false);
 
+  // Update current time every second for real-time countdown
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Update re-keying timers every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const updatedEndpoints = endpoints.map(endpoint => ({
+        ...endpoint,
+        connections: endpoint.connections.map(conn => ({
+          ...conn,
+          timeToNextRekeying: Math.max(0, (conn.timeToNextRekeying || 0) - 1)
+        }))
+      }));
+      
+      // Only update if there are actual changes to prevent unnecessary re-renders
+      const hasChanges = endpoints.some(endpoint => 
+        endpoint.connections.some(conn => (conn.timeToNextRekeying || 0) > 0)
+      );
+      
+      if (hasChanges) {
+        onEndpointsChange(updatedEndpoints);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [endpoints, onEndpointsChange]);
   // Calculate positions for endpoints in a circular layout
   const getEndpointPositions = (): { [key: string]: Position } => {
     const positions: { [key: string]: Position } = {};
@@ -851,6 +884,23 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
               <div className="text-blue-300 font-mono text-xs">{hoverInfo.phase1}</div>
               <div className="text-slate-400 text-xs mt-1 mb-1">Phase 2:</div>
               <div className="text-violet-300 font-mono text-xs">{hoverInfo.phase2}</div>
+            </div>
+            <div className="border-t border-slate-700 pt-2 mt-2">
+              <div className="text-slate-400 text-xs mb-1">Live Countdown:</div>
+              <div className="text-emerald-400 font-mono text-sm font-bold">
+                {(() => {
+                  const totalSeconds = Math.max(0, hoverInfo.timeToNextRekeying);
+                  const hours = Math.floor(totalSeconds / 3600);
+                  const minutes = Math.floor((totalSeconds % 3600) / 60);
+                  const seconds = totalSeconds % 60;
+                  
+                  if (hours > 0) {
+                    return `${hours}h ${minutes}m ${seconds}s`;
+                  } else {
+                    return `${minutes}m ${seconds}s`;
+                  }
+                })()}
+              </div>
             </div>
           </div>
         </div>
