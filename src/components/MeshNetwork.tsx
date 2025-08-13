@@ -885,23 +885,6 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
               <div className="text-slate-400 text-xs mt-1 mb-1">Phase 2:</div>
               <div className="text-violet-300 font-mono text-xs">{hoverInfo.phase2}</div>
             </div>
-            <div className="border-t border-slate-700 pt-2 mt-2">
-              <div className="text-slate-400 text-xs mb-1">Live Countdown:</div>
-              <div className="text-emerald-400 font-mono text-sm font-bold">
-                {(() => {
-                  const totalSeconds = Math.max(0, hoverInfo.timeToNextRekeying);
-                  const hours = Math.floor(totalSeconds / 3600);
-                  const minutes = Math.floor((totalSeconds % 3600) / 60);
-                  const seconds = totalSeconds % 60;
-                  
-                  if (hours > 0) {
-                    return `${hours}h ${minutes}m ${seconds}s`;
-                  } else {
-                    return `${minutes}m ${seconds}s`;
-                  }
-                })()}
-              </div>
-            </div>
           </div>
         </div>
       )}

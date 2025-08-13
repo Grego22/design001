@@ -123,11 +123,54 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
             Available Reports
           </h3>
           <div className="space-y-3">
-            <div className="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
-              <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
-              <span className="font-medium text-slate-700">Current Active Connections</span>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Network Performance Analysis</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">PDF</span>
             </div>
-            <div className="flex items-center p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-emerald-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Security Compliance Report</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">PDF</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-amber-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Re-keying Activity Summary</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">CSV</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-purple-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">BLAST Parameter Optimization</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">JSON</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-red-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Threat Detection & Anomalies</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">PDF</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-indigo-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Geographic Distribution Analysis</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">PDF</span>
+            </div>
+                <div className="w-2 h-2 bg-teal-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Quantum Cryptography Status</span>
+              <span className="font-medium text-slate-700">Current Active Connections</span>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">PDF</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
               <div className="w-2 h-2 bg-emerald-600 rounded-full mr-3"></div>
               <span className="font-medium text-slate-700">Endpoints with ML-KEM</span>
             </div>
@@ -236,9 +279,10 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
               <div className="flex justify-between items-center">
                 <span className="font-medium text-slate-700">Active/Queried Servers</span>
                 <span className="text-lg font-bold text-amber-600">
-                  {blastParams.activeServers}/{blastParams.queriedServers}
-                </span>
+                <div className="w-2 h-2 bg-orange-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Connection Latency Trends</span>
               </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">CSV</span>
             </div>
           </div>
         </div>
