@@ -22,7 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
             <img 
               src="/src/assets/QRY_logo_ symbol_ dark.svg" 
               alt="Qrypt Logo" 
-              className="w-10 h-10 object-contain"
+             className="w-10 h-10 object-contain filter brightness-200 contrast-125"
             />
           </div>
           <div>
