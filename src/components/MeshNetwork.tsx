@@ -388,14 +388,14 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
       <div className="absolute top-4 right-4 flex space-x-2">
         <button
           onClick={() => setShowForceRekeyModal(true)}
-          className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium text-sm hover:bg-red-600 transition-all duration-200"
+          className="px-4 py-2 bg-slate-700 text-white rounded-lg font-medium text-sm hover:bg-slate-800 transition-all duration-200 border border-slate-600"
         >
           <RotateCcw className="w-4 h-4 inline mr-2" />
           Force Rekey
         </button>
         <button
           onClick={() => setShowBlastConfig(!showBlastConfig)}
-          className="px-4 py-2 bg-amber-500 text-white rounded-lg font-medium text-sm hover:bg-amber-600 transition-all duration-200"
+          className="px-4 py-2 bg-slate-600 text-white rounded-lg font-medium text-sm hover:bg-slate-700 transition-all duration-200 border border-slate-500"
         >
           <Settings className="w-4 h-4 inline mr-2" />
           BLAST Config
@@ -404,8 +404,8 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
           onClick={() => setIsAddingNode(!isAddingNode)}
           className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
             isAddingNode 
-              ? 'bg-red-500 text-white hover:bg-red-600' 
-              : 'bg-blue-500 text-white hover:bg-blue-600'
+              ? 'bg-slate-800 text-white hover:bg-slate-900 border border-slate-700' 
+              : 'bg-slate-600 text-white hover:bg-slate-700 border border-slate-500'
           }`}
         >
           {isAddingNode ? (
