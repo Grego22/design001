@@ -23,6 +23,10 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
               src="/qrypt-logo.svg" 
               alt="Qrypt Logo" 
               className="w-10 h-10 object-contain"
+              onError={(e) => {
+                console.log('Logo failed to load');
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
           <div>
