@@ -20,9 +20,9 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
         <div className="flex items-center space-x-3 mb-2">
           <div className="w-12 h-12 flex items-center justify-center">
             <img 
-              src="/QRY_logo_symbol_dark.svg" 
+              src="/qrypt-logo.svg" 
               alt="Qrypt Logo" 
-              className="w-10 h-10 object-contain"
+              className="w-10 h-10 object-contain filter invert"
             />
           </div>
           <div>
