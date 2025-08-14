@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
               <img 
                 src="/QRY_logo_symbol_dark.svg" 
                 alt="Qrypt Logo" 
-                className="w-full h-full object-contain invert brightness-200"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   e.currentTarget.nextElementSibling.style.display = 'flex';
