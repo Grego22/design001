@@ -165,14 +165,27 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
               </div>
               <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">PDF</span>
             </div>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
                 <div className="w-2 h-2 bg-teal-600 rounded-full mr-3"></div>
                 <span className="font-medium text-slate-700">Quantum Cryptography Status</span>
-              <span className="font-medium text-slate-700">Current Active Connections</span>
+              </div>
               <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">PDF</span>
             </div>
             <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
-              <div className="w-2 h-2 bg-emerald-600 rounded-full mr-3"></div>
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-emerald-600 rounded-full mr-3"></div>
+                <span className="font-medium text-slate-700">Current Active Connections</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">CSV</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+              <div className="flex items-center">
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+                <div className="w-2 h-2 bg-purple-600 rounded-full mr-3"></div>
               <span className="font-medium text-slate-700">Endpoints with ML-KEM</span>
+              </div>
+              <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded">JSON</span>
             </div>
           </div>
         </div>
