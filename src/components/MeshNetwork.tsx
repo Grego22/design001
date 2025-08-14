@@ -388,14 +388,14 @@ const MeshNetwork: React.FC<MeshNetworkProps> = ({
       <div className="absolute top-4 right-4 flex space-x-2">
         <button
           onClick={() => setShowForceRekeyModal(true)}
-          className="px-4 py-2 bg-red-800 text-white rounded-lg font-medium text-sm hover:bg-red-900 transition-all duration-200 border border-red-700"
+          className="px-4 py-2 bg-gray-700 text-white rounded-lg font-medium text-sm hover:bg-gray-800 transition-all duration-200 border border-gray-600"
         >
           <RotateCcw className="w-4 h-4 inline mr-2" />
           Force Rekey
         </button>
         <button
           onClick={() => setShowBlastConfig(!showBlastConfig)}
-          className="px-4 py-2 bg-amber-700 text-white rounded-lg font-medium text-sm hover:bg-amber-800 transition-all duration-200 border border-amber-600"
+          className="px-4 py-2 bg-indigo-700 text-white rounded-lg font-medium text-sm hover:bg-indigo-800 transition-all duration-200 border border-indigo-600"
         >
           <Settings className="w-4 h-4 inline mr-2" />
           BLAST Config
