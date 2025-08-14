@@ -329,4 +329,16 @@ const Reports: React.FC<ReportsProps> = ({ endpoints, blastParams }) => {
               <div className="text-sm font-medium text-blue-800">Quantum-Safe</div>
               <div className="text-xs text-blue-600 mt-1">Post-Quantum Ready</div>
             </div>
-            <div className="text-center p-4 bg-emer
+            <div className="text-center p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+              <div className="text-3xl font-bold text-emerald-600 mb-2">24/7</div>
+              <div className="text-sm font-medium text-emerald-800">Monitoring</div>
+              <div className="text-xs text-emerald-600 mt-1">Active Protection</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Reports;
