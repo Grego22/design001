@@ -20,9 +20,13 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
         <div className="flex items-center space-x-3 mb-2">
           <div className="w-12 h-12 flex items-center justify-center">
             <img 
-              src="/qrypt-logo.png" 
+              src="/qrypt-full-logo.png" 
               alt="Qrypt Logo" 
-              className="w-16 h-16 object-contain"
+              className="w-20 h-12 object-contain"
+              onError={(e) => {
+                console.error('Logo failed to load');
+                e.currentTarget.style.display = 'none';
+              }}
             />
           </div>
         </div>
