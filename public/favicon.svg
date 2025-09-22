@@ -1,0 +1,9 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" fill="#2D2D44"/>
+  <g transform="translate(16,16)">
+    <!-- Qrypt star symbol -->
+    <g transform="scale(0.8)">
+      <path d="M0,-8 L2,-2 L8,-2 L3,1 L5,7 L0,4 L-5,7 L-3,1 L-8,-2 L-2,-2 Z" fill="white"/>
+    </g>
+  </g>
+</svg>
