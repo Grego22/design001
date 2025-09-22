@@ -28,14 +28,9 @@ const Dashboard: React.FC<DashboardProps> = ({
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-blue-600 rounded-2xl shadow-xl">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-slate-800">Quantum Secure Networking</h1>
-                <p className="text-slate-600">IPSec Gateway Management Dashboard</p>
-              </div>
+            <div>
+              <h1 className="text-3xl font-bold text-slate-800">Qrypt Quantum Secure Networking</h1>
+              <p className="text-slate-600">IPSec Gateway Management Dashboard</p>
             </div>
             <button
               onClick={() => setShowMeshNetwork(!showMeshNetwork)}
