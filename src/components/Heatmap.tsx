@@ -111,7 +111,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ endpoints, blastParams }) => {
   };
 
   return (
-    <div className="h-full overflow-auto bg-slate-50">
+    <div className="h-full overflow-auto" style={{ backgroundColor: '#F3F4F6' }}>
       <div className="p-6">
         {/* Header */}
         <div className="mb-8">

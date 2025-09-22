@@ -13,12 +13,12 @@ function App() {
   const [blastParams, setBlastParams] = useState<NetworkBlastParams>(networkBlastParams);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen flex" style={{ backgroundColor: '#F3F4F6' }}>
       <Sidebar 
         selectedProduct={selectedProduct}
         onProductSelect={setSelectedProduct}
       />
-      <main className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-hidden" style={{ backgroundColor: '#F3F4F6' }}>
         {selectedProduct === 'ipsec-gateway' && (
           <Dashboard 
             endpoints={endpoints} 
