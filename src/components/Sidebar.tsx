@@ -15,24 +15,15 @@ const products = [
 
 const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) => {
   return (
-    <div className="w-72 bg-black shadow-2xl border-r border-gray-800 flex flex-col">
+    <div className="w-72 shadow-2xl border-r border-gray-800 flex flex-col" style={{ backgroundColor: '#1E1E35' }}>
       <div className="p-6 border-b border-gray-800">
         <div className="flex items-center space-x-3 mb-2">
           <div className="w-12 h-12 flex items-center justify-center">
             <img 
-              src="/qrypt-logo.svg" 
+              src="/qrypt-logo.png" 
               alt="Qrypt Logo" 
-              className="w-10 h-10 object-contain"
-              onError={(e) => {
-                console.log('Logo failed to load');
-                e.currentTarget.style.display = 'none';
-              }}
+              className="w-16 h-16 object-contain"
             />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white">
-              Qrypt
-            </h1>
           </div>
         </div>
       </div>
