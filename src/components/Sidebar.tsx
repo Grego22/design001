@@ -14,18 +14,16 @@ const products = [
   { id: 'system-config', name: 'System Config', icon: Settings, color: 'text-slate-600' },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) => {
-  return (
-    <div className="w-72 shadow-2xl border-r border-gray-800 flex flex-col" style={{ backgroundColor: '#1E1E35' }}>
-      <div className="p-6 border-b border-gray-800">
-        <div className="flex items-center space-x-3 mb-2">
-          <div className="w-12 h-12 flex items-center justify-center">
-            <img 
-              src={qryptLogo}
-              alt="Qrypt Logo" 
-              className="w-48 h-32 object-contain"
-            />
-          </div>
+        <div className="mb-2">
+          <img 
+            src={qryptLogo}
+            alt="Qrypt Logo" 
+            className="w-full h-24 object-contain"
+            onError={(e) => {
+              console.error('Logo failed to load');
+              e.currentTarget.style.display = 'none';
+            }}
+          />
         </div>
       </div>
       
