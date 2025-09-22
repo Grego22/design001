@@ -14,6 +14,10 @@ const products = [
   { id: 'system-config', name: 'System Config', icon: Settings, color: 'text-slate-600' },
 ];
 
+const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) => {
+  return (
+    <div className="w-64 bg-gray-900 text-white flex flex-col h-full shadow-2xl">
+      <div className="p-6 border-b border-gray-800">
         <div className="mb-2">
           <img 
             src={qryptLogo}
