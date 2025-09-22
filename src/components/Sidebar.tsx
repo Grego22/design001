@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Server, Network, Settings, Lock, BarChart3 } from 'lucide-react';
+import qryptLogo from '../assets/Qrypt black 1200 sq.png';
 
 interface SidebarProps {
   selectedProduct: string;
@@ -20,13 +21,9 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
         <div className="flex items-center space-x-3 mb-2">
           <div className="w-12 h-12 flex items-center justify-center">
             <img 
-              src="/qrypt-full-logo.png" 
+              src={qryptLogo}
               alt="Qrypt Logo" 
               className="w-20 h-12 object-contain"
-              onError={(e) => {
-                console.error('Logo failed to load');
-                e.currentTarget.style.display = 'none';
-              }}
             />
           </div>
         </div>
