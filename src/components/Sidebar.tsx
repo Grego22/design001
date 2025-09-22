@@ -16,7 +16,7 @@ const products = [
 
 const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) => {
   return (
-    <div className="w-64 bg-gray-900 text-white flex flex-col h-full shadow-2xl">
+    <div className="w-64 text-white flex flex-col min-h-screen shadow-2xl" style={{ backgroundColor: '#1E1E35' }}>
       <div className="p-6 border-b border-gray-800">
         <div className="mb-2">
           <img 
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
             <span className="text-white text-sm font-bold">SA</span>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-200">Security Admin</p>
+            <p className="text-sm font-medium text-gray-200">Admin</p>
             <p className="text-xs text-gray-400">admin@qrypt.com</p>
           </div>
         </div>
