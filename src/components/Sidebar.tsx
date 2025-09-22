@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shield, Server, Network, Settings, Lock, BarChart3 } from 'lucide-react';
-import qryptLogo from '../assets/Qrypt black 1200 sq.png';
+import qryptLogo from '../assets/Qrypt Black logo transparent.png';
 
 interface SidebarProps {
   selectedProduct: string;
