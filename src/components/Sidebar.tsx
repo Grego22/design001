@@ -18,11 +18,11 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
   return (
     <div className="w-64 text-white flex flex-col min-h-screen shadow-2xl" style={{ backgroundColor: '#1E1E35' }}>
       <div className="p-6 border-b border-gray-800">
-        <div className="mb-2">
+        <div className="mb-2 w-full">
           <img 
             src={qryptLogo}
             alt="Qrypt Logo" 
-            className="w-full h-24 object-contain"
+            className="w-full h-16 object-cover"
             onError={(e) => {
               console.error('Logo failed to load');
               e.currentTarget.style.display = 'none';
