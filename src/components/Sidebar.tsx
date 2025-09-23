@@ -20,7 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedProduct, onProductSelect }) =
       <div className="p-6 border-b border-gray-800">
         <div className="mb-2 w-full">
           <img 
-            src="/QRY_social%20thumbnail_%20symbol_%20dark%20.png"
+            src="/src/assets/Qrypt%20logo%20white%20on%20black%201200%20630%20copy%20copy.png"
             alt="Qrypt Logo" 
             className="w-full h-16 object-cover"
             onError={(e) => {
